@@ -1,0 +1,413 @@
+# Client Questionnaire System - Cursor Rules
+
+## Core Tech Stack
+- Next.js 14 App Router with TypeScript strict mode
+- Tailwind CSS for all styling (NO inline styles, NO CSS modules)
+- Supabase for database and file storage
+- React Hook Form + Zod for form validation
+- React Hot Toast for notifications
+
+## Project Structure Rules
+
+### File Organization
+- `/app` - Next.js App Router pages only
+- `/components/ui` - Reusable UI components (Button, Input, etc.)
+- `/components/questionnaire` - Feature-specific components
+- `/lib` - Utilities, Supabase client, validation schemas
+- `/types` - All TypeScript type definitions
+- `/config` - Configuration files (questions, constants)
+
+### Naming Conventions
+- **Components**: PascalCase (QuestionSection.tsx)
+- **Utilities**: camelCase (generateSlug.ts)
+- **Types**: PascalCase with descriptive names (Questionnaire, QuestionConfig)
+- **Files**: kebab-case for non-components (supabase-client.ts)
+- **Database**: snake_case (questionnaire_responses)
+- **Variables**: camelCase (clientName, productName)
+- **Constants**: UPPER_SNAKE_CASE (MAX_FILE_SIZE)
+
+## TypeScript Rules
+
+### Type Safety
+- ALWAYS use TypeScript strict mode
+- NEVER use `any` type - use `unknown` if type is truly unknown
+- Define proper interfaces for all data structures
+- Use type guards for runtime type checking
+- Export types from dedicated types file
+
+### Database Types
+```typescript
+type QuestionnaireType = 'product-design' | 'web-design' | 'brand-design';
+type QuestionnaireStatus = 'not-started' | 'in-progress' | 'submitted';
+type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file';
+```
+
+## React Component Rules
+
+### Server vs Client Components
+- Use Server Components by default
+- Add 'use client' ONLY for:
+  - Forms and user interactions
+  - State management (useState, useReducer)
+  - Browser APIs
+  - React hooks
+- Keep Server Components for:
+  - Data fetching
+  - Static content
+  - Layout components
+
+### Component Structure
+```typescript
+// ✅ GOOD
+'use client';
+
+import { useState } from 'react';
+import type { QuestionConfig } from '@/types/questionnaire';
+
+interface Props {
+  question: QuestionConfig;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export function QuestionField({ question, value, onChange }: Props) {
+  // Component logic
+}
+
+// ❌ BAD - No types, unclear props
+export function QuestionField(props) {
+  // ...
+}
+```
+
+### State Management
+- Use React Hook Form for ALL form state
+- Use Zod for form validation
+- Keep local state minimal
+- Lift state up when needed by multiple components
+
+## Styling Rules
+
+### Tailwind CSS
+- Use Tailwind utility classes exclusively
+- NO inline styles
+- NO CSS modules
+- NO global CSS except in globals.css
+- Use Tailwind's responsive prefixes (sm:, md:, lg:)
+- Use Tailwind's spacing scale (p-4, m-2, gap-6)
+
+### Responsive Design
+- Mobile-first approach
+- Test all layouts on mobile, tablet, desktop
+- Use Tailwind breakpoints:
+  - sm: 640px
+  - md: 768px
+  - lg: 1024px
+  - xl: 1280px
+
+### Component Styling Pattern
+```typescript
+// ✅ GOOD
+<div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-sm md:p-6 lg:p-8">
+  <h2 className="text-2xl font-bold text-gray-900">Section Title</h2>
+  {/* content */}
+</div>
+
+// ❌ BAD
+<div style={{ padding: '16px', backgroundColor: 'white' }}>
+  {/* content */}
+</div>
+```
+
+## Database & Supabase Rules
+
+### Query Patterns
+```typescript
+// ✅ GOOD - Proper error handling
+const { data, error } = await supabase
+  .from('questionnaires')
+  .select('*')
+  .eq('slug', slug)
+  .single();
+
+if (error) throw new Error(`Failed to fetch: ${error.message}`);
+return data;
+
+// ❌ BAD - No error handling
+const { data } = await supabase.from('questionnaires').select('*');
+return data;
+```
+
+### CRUD Operations
+- Always use try-catch for database operations
+- Check for errors before using data
+- Use `.single()` when expecting one row
+- Use `.maybeSingle()` when row might not exist
+- Use specific columns in SELECT when possible
+
+### File Upload
+- Upload to `questionnaire-files` bucket
+- Path structure: `/{type}/{slug}/{filename}`
+- Validate file types and sizes
+- Handle upload errors with retry logic
+- Store URLs in database, not files
+
+## Form Handling Rules
+
+### React Hook Form + Zod
+```typescript
+// ✅ GOOD
+const formSchema = z.object({
+  client_name: z.string().min(2, 'Client name required'),
+  product_name: z.string().min(2, 'Product name required'),
+});
+
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    client_name: '',
+    product_name: '',
+  },
+});
+
+// ❌ BAD - No validation
+const [clientName, setClientName] = useState('');
+```
+
+### Form Submission
+- Validate all inputs before submission
+- Show loading state during submission
+- Disable submit button while loading
+- Show success/error feedback
+- Clear form on success (if appropriate)
+
+## Critical Business Rules
+
+### NO Auto-Save
+- NEVER implement auto-save functionality
+- Save ONLY when user clicks "Save Draft" button
+- Show clear confirmation when draft is saved
+- Update timestamp indicator after save
+
+### Slug Generation
+```typescript
+// Must check for uniqueness
+async function generateUniqueSlug(clientName: string, type: string) {
+  let slug = clientName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  let counter = 1;
+  
+  while (await slugExists(slug, type)) {
+    counter++;
+    slug = `${baseSlug}-${counter}`;
+  }
+  
+  return slug;
+}
+```
+
+### Token Verification
+```typescript
+// ALWAYS verify token before showing content
+async function verifyAccess(slug: string, type: string, token: string) {
+  const { data, error } = await supabase
+    .from('questionnaires')
+    .select('*')
+    .eq('type', type)
+    .eq('slug', slug)
+    .eq('access_token', token)
+    .single();
+    
+  if (error || !data) {
+    return null; // Invalid access
+  }
+  
+  return data;
+}
+```
+
+### Placeholder Replacement
+- Replace `[client]` with actual client_name
+- Replace `{{client}}` with actual client_name  
+- Replace elements with `data-client-name` attribute
+- Replace elements with `data-product-name` attribute
+- Use case-sensitive replacement
+
+## Error Handling Rules
+
+### User-Facing Errors
+- Show clear, actionable error messages
+- Use toast notifications for feedback
+- Provide fallback UI for error states
+- Log detailed errors to console for debugging
+
+### Error Boundaries
+```typescript
+// ✅ GOOD
+try {
+  await saveQuestionnaire(data);
+  toast.success('Questionnaire created!');
+} catch (error) {
+  console.error('Save failed:', error);
+  toast.error('Failed to create questionnaire. Please try again.');
+}
+
+// ❌ BAD
+await saveQuestionnaire(data); // No error handling
+```
+
+## Performance Rules
+
+### Optimization
+- Use Next.js Image component for images
+- Lazy load components when appropriate
+- Minimize client-side JavaScript
+- Use Server Components for static content
+- Cache data when possible
+
+### Loading States
+- Show skeleton loaders for async content
+- Disable buttons during loading
+- Show progress indicators for uploads
+- Provide immediate feedback for user actions
+
+## Security Rules
+
+### Input Validation
+- Validate ALL user inputs server-side
+- Sanitize file uploads
+- Check file types and sizes
+- Never trust client-side validation alone
+
+### Token Security
+- Never log tokens
+- Never expose tokens in error messages
+- Verify token on every protected request
+- Generate cryptographically secure tokens
+
+### SQL Injection Prevention
+- Use Supabase parameterized queries (built-in protection)
+- Never concatenate user input into queries
+- Validate input types before database operations
+
+## Questions Configuration
+
+### Question Object Structure
+```typescript
+interface QuestionConfig {
+  key: string;           // Unique identifier (e.g., 'product_name_meaning')
+  section: string;       // Section name
+  label: string;         // Question text
+  type: QuestionType;    // Input type
+  required: boolean;     // Is required field
+  placeholder?: string;  // Placeholder text
+  helper?: string;       // Helper text (italic)
+  subfields?: string[];  // For Primary/Secondary questions
+}
+```
+
+### Loading Questions
+- Load from config file at build time
+- Type-check all questions
+- Validate question keys are unique
+- Group by sections for display
+
+## Testing Requirements
+
+### Before Committing
+- [ ] TypeScript compiles without errors
+- [ ] All forms validate correctly
+- [ ] Token verification works
+- [ ] File uploads work
+- [ ] Draft save works (manual only)
+- [ ] Submit triggers webhook
+- [ ] Mobile responsive
+- [ ] No console errors
+- [ ] Error handling works
+
+### Manual Testing Scenarios
+1. Create questionnaire → Get link
+2. Open with valid token → See form
+3. Open with invalid token → See error
+4. Fill form → Save draft → Reload → Draft loads
+5. Submit incomplete → See validation errors
+6. Submit complete → Success page shown
+7. Duplicate client name → Gets -2 suffix
+8. Upload files → Files saved correctly
+
+## Code Comments
+
+### When to Comment
+- Complex logic that isn't immediately obvious
+- Business rules and constraints
+- Workarounds or temporary solutions
+- API integrations
+- Non-obvious TypeScript types
+
+### When NOT to Comment
+- Obvious code (e.g., // Set name to value)
+- Self-documenting code with clear names
+- Code that duplicates what TypeScript types already say
+
+## Git Workflow
+
+### Commit Messages
+- Use conventional commits format
+- Examples:
+  - `feat: add product design questionnaire page`
+  - `fix: resolve token verification bug`
+  - `refactor: extract file upload component`
+  - `docs: update README with setup instructions`
+
+### Commit Frequency
+- Commit logical chunks of work
+- Don't commit broken code
+- Test before committing
+
+## n8n Webhook Integration
+
+### Webhook Call
+```typescript
+async function triggerWebhook(payload: WebhookPayload) {
+  try {
+    const response = await fetch(process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL!, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Webhook failed');
+    }
+  } catch (error) {
+    console.error('Webhook error:', error);
+    // Don't block user - webhook failure shouldn't prevent submission
+  }
+}
+```
+
+### Payload Structure
+- Include all questionnaire metadata
+- Include all responses grouped by section
+- Include link back to questionnaire
+- Include file URLs (not files themselves)
+
+## Accessibility Rules
+
+### ARIA Labels
+- Add aria-labels to interactive elements
+- Use semantic HTML
+- Ensure keyboard navigation works
+- Test with screen readers
+
+### Form Accessibility
+- Associate labels with inputs
+- Show validation errors clearly
+- Focus management after errors
+- Keyboard-accessible file uploads
+
+## Remember
+- Code should be readable and maintainable
+- Prefer simplicity over cleverness
+- Write code for humans, not just machines
+- Test thoroughly before considering done
+- When in doubt, follow Next.js best practices

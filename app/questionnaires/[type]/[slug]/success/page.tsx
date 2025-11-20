@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
 import { supabase } from '@/lib/supabase';
 import { CheckCircle } from 'lucide-react';
 
@@ -68,12 +67,9 @@ export default function SuccessPage({ params }: PageProps) {
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
           Thank You!
         </h1>
-        <p className="text-gray-600 mb-8">
+        <p className="text-gray-600">
           Your questionnaire has been submitted successfully. We&apos;ll review your responses and get back to you soon.
         </p>
-        <Button onClick={() => router.push('/questionnaires')}>
-          Return to Home
-        </Button>
       </div>
     </div>
   );

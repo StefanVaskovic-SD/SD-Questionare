@@ -13,7 +13,8 @@ import { getQuestionsByType, getAllQuestions } from '@/config/questions';
 import { triggerWebhook } from '@/lib/webhook';
 import type { Questionnaire, QuestionnaireType, QuestionConfig } from '@/types/questionnaire';
 import toast from 'react-hot-toast';
-import { Save, Send, Loader2 } from 'lucide-react';
+import { Save, Send, Loader2, Download } from 'lucide-react';
+import { generateCsvFromResponses, generateCsvFilename } from '@/lib/csv';
 
 interface PageProps {
   params: {
@@ -269,6 +270,82 @@ export default function QuestionnairePage({ params }: PageProps) {
     }, 100);
   };
 
+  const downloadCsv = () => {
+    if (!questionnaire) return;
+
+    // Prepare responses for CSV (same format as webhook)
+    const csvResponses = sections.flatMap((section) =>
+      section.questions.map((question) => {
+        const value = formValues[question.key as keyof FormData];
+        let answer = '';
+        let files: string[] = [];
+
+        if (question.type === 'file') {
+          files = Array.isArray(value) ? value : [];
+          answer = files.length > 0 ? `${files.length} file(s) uploaded` : '';
+        } else if (question.type === 'subfields') {
+          const arr = Array.isArray(value) ? value : [];
+          answer = arr
+            .map((v, i) => {
+              const label =
+                i === 0
+                  ? question.subfields?.primary.label || 'Primary'
+                  : question.subfields?.secondary.label || 'Secondary';
+              return `${label}: ${v || '(empty)'}`;
+            })
+            .join('\n');
+        } else {
+          // Ensure value is string
+          if (Array.isArray(value)) {
+            answer = value.join('\n\n');
+          } else if (typeof value === 'string') {
+            answer = value || '';
+          } else {
+            answer = '';
+          }
+        }
+
+        return {
+          section: section.title,
+          question: question.label.replace(/\[client\]/g, questionnaire.client_name).replace(/\{\{client\}\}/g, questionnaire.client_name),
+          answer,
+          files,
+        };
+      })
+    );
+
+    // Generate CSV content
+    const submittedAt = questionnaire.submitted_at || new Date().toISOString();
+    const csvContent = generateCsvFromResponses(
+      questionnaire.client_name,
+      questionnaire.product_name,
+      type,
+      submittedAt,
+      csvResponses
+    );
+
+    // Generate filename
+    const filename = generateCsvFilename(
+      questionnaire.client_name,
+      questionnaire.product_name,
+      submittedAt
+    );
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success('CSV downloaded successfully!');
+  };
+
   const onSubmit = async (data: FormData) => {
     if (!questionnaire) return;
 
@@ -494,6 +571,17 @@ export default function QuestionnairePage({ params }: PageProps) {
                   </>
                 )}
               </Button>
+              {questionnaire.status === 'submitted' && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={downloadCsv}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download CSV
+                </Button>
+              )}
             </div>
             {questionnaire.status === 'submitted' && (
               <p className="text-sm text-gray-500 mt-3 text-center">

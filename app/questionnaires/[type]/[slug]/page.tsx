@@ -193,6 +193,7 @@ export default function QuestionnairePage({ params }: PageProps) {
     }
 
     loadQuestionnaire();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, type, params.slug, router, setValue]);
 
   const saveDraft = async () => {
@@ -286,7 +287,14 @@ export default function QuestionnairePage({ params }: PageProps) {
           // For subfields, store as JSON array
           answerText = Array.isArray(value) ? JSON.stringify(value) : null;
         } else {
-          answerText = Array.isArray(value) ? value.join('\n\n') : (value || null);
+          // Ensure value is string or null
+          if (Array.isArray(value)) {
+            answerText = value.join('\n\n');
+          } else if (typeof value === 'string') {
+            answerText = value || null;
+          } else {
+            answerText = null;
+          }
         }
 
         return supabase
@@ -346,7 +354,14 @@ export default function QuestionnairePage({ params }: PageProps) {
               })
               .join('\n');
           } else {
-            answer = Array.isArray(value) ? value.join('\n\n') : (value || '');
+            // Ensure value is string
+            if (Array.isArray(value)) {
+              answer = value.join('\n\n');
+            } else if (typeof value === 'string') {
+              answer = value || '';
+            } else {
+              answer = '';
+            }
           }
 
           return {
@@ -417,7 +432,7 @@ export default function QuestionnairePage({ params }: PageProps) {
         </div>
 
         {/* Progress Indicator */}
-        <ProgressIndicator sections={sections} values={formValues} />
+        <ProgressIndicator sections={sections} values={formValues as Record<string, string | string[]>} />
 
         {/* Form */}
         <form 
@@ -431,7 +446,7 @@ export default function QuestionnairePage({ params }: PageProps) {
             <QuestionSection
               key={index}
               section={section}
-              values={formValues}
+              values={formValues as Record<string, string | string[]>}
               onChange={(key, value) => setValue(key as keyof FormData, value as any)}
               errors={Object.fromEntries(
                 Object.entries(errors).map(([key, error]) => [

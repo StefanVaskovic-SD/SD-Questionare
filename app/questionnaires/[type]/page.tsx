@@ -34,6 +34,15 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
 
   const type = params.type as QuestionnaireType;
 
+  // Initialize form hook before any conditional returns
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateQuestionnaireForm>({
+    resolver: zodResolver(createQuestionnaireSchema),
+  });
+
   // Validate questionnaire type
   const validTypes: QuestionnaireType[] = ['product-design', 'web-design', 'brand-design'];
   if (!validTypes.includes(type)) {
@@ -51,14 +60,6 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
       </div>
     );
   }
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateQuestionnaireForm>({
-    resolver: zodResolver(createQuestionnaireSchema),
-  });
 
   const onSubmit = async (data: CreateQuestionnaireForm) => {
     setIsLoading(true);

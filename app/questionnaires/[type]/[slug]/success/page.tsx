@@ -69,7 +69,7 @@ export default function SuccessPage({ params }: PageProps) {
           Thank You!
         </h1>
         <p className="text-gray-600 mb-8">
-          Your questionnaire has been submitted successfully. We'll review your responses and get back to you soon.
+          Your questionnaire has been submitted successfully. We&apos;ll review your responses and get back to you soon.
         </p>
         <Button onClick={() => router.push('/questionnaires')}>
           Return to Home

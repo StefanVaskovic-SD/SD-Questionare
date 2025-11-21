@@ -1,12 +1,47 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { isAdminAuthenticated, logoutAdmin } from '@/lib/auth';
+import { LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function QuestionnairesPage() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsAuthenticated(isAdminAuthenticated());
+  }, []);
+
+  const handleLogout = () => {
+    logoutAdmin();
+    toast.success('Logged out successfully');
+    // Redirect to home to trigger password modal
+    window.location.href = '/';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
-        <h1 className="text-4xl font-bold text-gray-900 text-center mb-12">
-          StudioDirection Questionnaires
-        </h1>
+        <div className="flex justify-between items-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900">
+            StudioDirection Questionnaires
+          </h1>
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          )}
+        </div>
         
         <div className="grid gap-6 md:grid-cols-3">
           <Link

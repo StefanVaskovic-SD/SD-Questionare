@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { PasswordProtection } from "@/components/auth/PasswordProtection";
 
 export const metadata: Metadata = {
   title: "StudioDirection Questionnaires",
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <PasswordProtection>
+          {children}
+        </PasswordProtection>
         <Toaster position="top-right" />
       </body>
     </html>

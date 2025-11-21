@@ -128,7 +128,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
   if (createdLink) {
     return (
       <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full">
+        <div className="max-w-[52rem] w-full">
           <div className="mb-8 flex justify-center">
             <Image
               src="/sd-logo.svg"

@@ -147,41 +147,42 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
                 <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
                   Shareable Link
                 </label>
-              <div className="flex gap-2">
-                <Input
-                  value={createdLink}
-                  readOnly
-                  className="flex-1 font-mono text-sm"
-                />
-                <Button
-                  onClick={copyToClipboard}
-                  variant="outline"
-                  className="px-4"
-                >
-                  {copied ? (
-                    <Check className="w-5 h-5 text-[#6295ff]" />
-                  ) : (
-                    <Copy className="w-5 h-5" />
-                  )}
-                </Button>
+                <div className="flex gap-2">
+                  <Input
+                    value={createdLink}
+                    readOnly
+                    className="flex-1 font-mono text-sm"
+                  />
+                  <Button
+                    onClick={copyToClipboard}
+                    variant="outline"
+                    className="px-4"
+                  >
+                    {copied ? (
+                      <Check className="w-5 h-5 text-[#6295ff]" />
+                    ) : (
+                      <Copy className="w-5 h-5" />
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-4">
-            <Button
-              onClick={() => router.push('/questionnaires')}
-              variant="outline"
-              className="flex-1"
-            >
-              Create Another
-            </Button>
-            <Button
-              onClick={() => window.open(createdLink, '_blank')}
-              className="flex-1"
-            >
-              Open Questionnaire
-            </Button>
+            <div className="flex gap-4">
+              <Button
+                onClick={() => router.push('/questionnaires')}
+                variant="outline"
+                className="flex-1"
+              >
+                Create Another
+              </Button>
+              <Button
+                onClick={() => window.open(createdLink, '_blank')}
+                className="flex-1"
+              >
+                Open Questionnaire
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -212,44 +213,44 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
               <label htmlFor="client_name" className="block text-sm font-medium text-[#f5f5f7] mb-2">
                 Client Name <span className="text-red-500">*</span>
               </label>
-            <Input
-              id="client_name"
-              {...register('client_name')}
-              placeholder="e.g., Nike"
-              error={!!errors.client_name}
-            />
-            {errors.client_name && (
-              <p className="mt-1 text-sm text-red-600">{errors.client_name.message}</p>
-            )}
-          </div>
+              <Input
+                id="client_name"
+                {...register('client_name')}
+                placeholder="e.g., Nike"
+                error={!!errors.client_name}
+              />
+              {errors.client_name && (
+                <p className="mt-1 text-sm text-red-600">{errors.client_name.message}</p>
+              )}
+            </div>
 
             <div>
               <label htmlFor="product_name" className="block text-sm font-medium text-[#f5f5f7] mb-2">
                 Product Name <span className="text-red-500">*</span>
               </label>
-            <Input
-              id="product_name"
-              {...register('product_name')}
-              placeholder="e.g., Air Max"
-              error={!!errors.product_name}
-            />
-            {errors.product_name && (
-              <p className="mt-1 text-sm text-red-600">{errors.product_name.message}</p>
-            )}
-          </div>
+              <Input
+                id="product_name"
+                {...register('product_name')}
+                placeholder="e.g., Air Max"
+                error={!!errors.product_name}
+              />
+              {errors.product_name && (
+                <p className="mt-1 text-sm text-red-600">{errors.product_name.message}</p>
+              )}
+            </div>
 
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.push('/questionnaires')}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1">
-              {isLoading ? 'Creating...' : 'Create Questionnaire'}
-            </Button>
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push('/questionnaires')}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading} className="flex-1">
+                {isLoading ? 'Creating...' : 'Create Questionnaire'}
+              </Button>
             </div>
           </form>
         </div>

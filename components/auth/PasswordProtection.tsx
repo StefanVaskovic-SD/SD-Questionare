@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { PasswordModal } from './PasswordModal';
 import { isAdminAuthenticated, isPublicQuestionnairePath } from '@/lib/auth';
@@ -9,7 +9,7 @@ interface PasswordProtectionProps {
   children: React.ReactNode;
 }
 
-export function PasswordProtection({ children }: PasswordProtectionProps) {
+function PasswordProtectionContent({ children }: PasswordProtectionProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -55,5 +55,24 @@ export function PasswordProtection({ children }: PasswordProtectionProps) {
 
   // Show protected content
   return <>{children}</>;
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export function PasswordProtection({ children }: PasswordProtectionProps) {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PasswordProtectionContent>{children}</PasswordProtectionContent>
+    </Suspense>
+  );
 }
 

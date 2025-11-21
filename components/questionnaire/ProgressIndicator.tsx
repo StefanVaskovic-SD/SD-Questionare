@@ -19,20 +19,20 @@ export function ProgressIndicator({ sections, values }: ProgressIndicatorProps) 
   const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+    <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-4 mb-6">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">Progress</span>
-        <span className="text-sm font-medium text-gray-900">
+        <span className="text-sm font-medium text-[#f5f5f7]">Progress</span>
+        <span className="text-sm font-medium text-[#f5f5f7]">
           {answeredQuestions} / {totalQuestions} questions
         </span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-[#2a2a2a] rounded-full h-2">
         <div
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+          className="bg-[#6295ff] h-2 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <p className="text-xs text-gray-500 mt-2">{percentage}% complete</p>
+      <p className="text-xs text-[#86868b] mt-2">{percentage}% complete</p>
     </div>
   );
 }

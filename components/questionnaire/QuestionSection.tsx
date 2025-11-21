@@ -23,10 +23,10 @@ export function QuestionSection({
   questionnaireSlug,
 }: QuestionSectionProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">{section.title}</h2>
+    <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 md:p-8">
+      <h2 className="text-2xl font-bold text-[#f5f5f7] mb-2">{section.title}</h2>
       {section.intro && (
-        <p className="text-gray-600 mb-6 italic">{section.intro}</p>
+        <p className="text-[#86868b] mb-6 italic">{section.intro}</p>
       )}
       
       <div className="space-y-6">

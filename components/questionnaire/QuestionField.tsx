@@ -43,17 +43,17 @@ export function QuestionField({
     return (
       <div className="space-y-4" data-question-key={question.key}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
             {label}
             {question.required && <span className="text-red-500 ml-1">*</span>}
           </label>
           {helper && (
-            <p className="text-sm text-gray-500 italic mb-3">{helper}</p>
+            <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
           )}
           
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[#86868b] mb-1">
                 {question.subfields.primary.label}
               </label>
               <Textarea
@@ -69,7 +69,7 @@ export function QuestionField({
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-[#86868b] mb-1">
                 {question.subfields.secondary.label}
               </label>
               <Textarea
@@ -97,12 +97,12 @@ export function QuestionField({
     
     return (
       <div data-question-key={question.key}>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
           {label}
           {question.required && <span className="text-red-500 ml-1">*</span>}
         </label>
         {helper && (
-          <p className="text-sm text-gray-500 italic mb-3">{helper}</p>
+          <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
         )}
         <FileUpload
           questionKey={question.key}
@@ -123,12 +123,12 @@ export function QuestionField({
 
   return (
     <div data-question-key={question.key}>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
         {label}
         {question.required && <span className="text-red-500 ml-1">*</span>}
       </label>
       {helper && (
-        <p className="text-sm text-gray-500 italic mb-3">{helper}</p>
+        <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
       )}
       
       {isTextarea ? (

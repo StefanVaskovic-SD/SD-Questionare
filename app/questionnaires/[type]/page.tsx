@@ -12,6 +12,7 @@ import { generateUniqueSlug, generateAccessToken, getQuestionnaireUrl } from '@/
 import type { QuestionnaireType } from '@/types/questionnaire';
 import toast from 'react-hot-toast';
 import { Copy, Check } from 'lucide-react';
+import Image from 'next/image';
 
 const createQuestionnaireSchema = z.object({
   client_name: z.string().min(2, 'Client name must be at least 2 characters'),
@@ -47,10 +48,10 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
   const validTypes: QuestionnaireType[] = ['product-design', 'web-design', 'brand-design'];
   if (!validTypes.includes(type)) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Invalid Questionnaire Type</h1>
-          <p className="text-gray-600 mb-6">
+      <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8 max-w-md w-full text-center">
+          <h1 className="text-2xl font-bold text-[#f5f5f7] mb-4">Invalid Questionnaire Type</h1>
+          <p className="text-[#86868b] mb-6">
             The questionnaire type &quot;{type}&quot; is not valid.
           </p>
           <Button onClick={() => router.push('/questionnaires')}>
@@ -126,17 +127,26 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
 
   if (createdLink) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl w-full">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-            Questionnaire Created!
-          </h1>
-          
-          <div className="space-y-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Shareable Link
-              </label>
+      <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full">
+          <div className="mb-8 flex justify-center">
+            <Image
+              src="/sd-logo.svg"
+              alt="StudioDirection"
+              width={216}
+              height={24}
+            />
+          </div>
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8">
+            <h1 className="text-3xl font-bold text-[#f5f5f7] mb-6 text-center">
+              Questionnaire Created!
+            </h1>
+            
+            <div className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+                  Shareable Link
+                </label>
               <div className="flex gap-2">
                 <Input
                   value={createdLink}
@@ -149,7 +159,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
                   className="px-4"
                 >
                   {copied ? (
-                    <Check className="w-5 h-5 text-green-600" />
+                    <Check className="w-5 h-5 text-[#6295ff]" />
                   ) : (
                     <Copy className="w-5 h-5" />
                   )}
@@ -179,20 +189,29 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
-          Create {getTypeDisplayName(type)} Questionnaire
-        </h1>
-        <p className="text-gray-600 text-center mb-8">
-          Fill in the details to create a new questionnaire
-        </p>
+    <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        <div className="mb-8 flex justify-center">
+          <Image
+            src="/sd-logo.svg"
+            alt="StudioDirection"
+            width={216}
+            height={24}
+          />
+        </div>
+        <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8">
+          <h1 className="text-3xl font-bold text-[#f5f5f7] mb-2 text-center">
+            Create {getTypeDisplayName(type)} Questionnaire
+          </h1>
+          <p className="text-[#86868b] text-center mb-8">
+            Fill in the details to create a new questionnaire
+          </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label htmlFor="client_name" className="block text-sm font-medium text-gray-700 mb-2">
-              Client Name <span className="text-red-500">*</span>
-            </label>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label htmlFor="client_name" className="block text-sm font-medium text-[#f5f5f7] mb-2">
+                Client Name <span className="text-red-500">*</span>
+              </label>
             <Input
               id="client_name"
               {...register('client_name')}
@@ -204,10 +223,10 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
             )}
           </div>
 
-          <div>
-            <label htmlFor="product_name" className="block text-sm font-medium text-gray-700 mb-2">
-              Product Name <span className="text-red-500">*</span>
-            </label>
+            <div>
+              <label htmlFor="product_name" className="block text-sm font-medium text-[#f5f5f7] mb-2">
+                Product Name <span className="text-red-500">*</span>
+              </label>
             <Input
               id="product_name"
               {...register('product_name')}
@@ -231,8 +250,9 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
             <Button type="submit" disabled={isLoading} className="flex-1">
               {isLoading ? 'Creating...' : 'Create Questionnaire'}
             </Button>
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

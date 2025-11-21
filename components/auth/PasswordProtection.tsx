@@ -39,10 +39,10 @@ function PasswordProtectionContent({ children }: PasswordProtectionProps) {
   // Show loading state while checking
   if (isChecking) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="w-8 h-8 border-4 border-[#6295ff] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#86868b]">Loading...</p>
         </div>
       </div>
     );
@@ -59,10 +59,10 @@ function PasswordProtectionContent({ children }: PasswordProtectionProps) {
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-[#080808] flex items-center justify-center">
       <div className="text-center">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading...</p>
+        <div className="w-8 h-8 border-4 border-[#6295ff] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-[#86868b]">Loading...</p>
       </div>
     </div>
   );

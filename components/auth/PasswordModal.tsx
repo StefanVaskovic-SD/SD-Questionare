@@ -40,19 +40,19 @@ export function PasswordModal({ onSuccess }: PasswordModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-8 relative">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg shadow-xl max-w-md w-full p-8 relative">
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-            <Lock className="w-8 h-8 text-red-600" />
+          <div className="w-16 h-16 bg-[#2a2a2a] rounded-full flex items-center justify-center">
+            <Lock className="w-8 h-8 text-[#6295ff]" />
           </div>
         </div>
         
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">
+        <h2 className="text-2xl font-bold text-[#f5f5f7] text-center mb-2">
           Access Denied
         </h2>
         
-        <p className="text-gray-600 text-center mb-6">
+        <p className="text-[#86868b] text-center mb-6">
           This page is password protected
         </p>
         

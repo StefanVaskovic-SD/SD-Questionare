@@ -15,6 +15,7 @@ import type { Questionnaire, QuestionnaireType, QuestionConfig } from '@/types/q
 import toast from 'react-hot-toast';
 import { Save, Send, Loader2, Download } from 'lucide-react';
 import { generateCsvFromResponses, generateCsvFilename } from '@/lib/csv';
+import Image from 'next/image';
 
 interface PageProps {
   params: {
@@ -480,8 +481,8 @@ export default function QuestionnairePage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#6295ff]" />
       </div>
     );
   }
@@ -491,18 +492,28 @@ export default function QuestionnairePage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[#080808] py-8 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Logo */}
+        <div className="mb-8">
+          <Image
+            src="/sd-logo.svg"
+            alt="StudioDirection"
+            width={216}
+            height={24}
+          />
+        </div>
+
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 mb-6">
+          <h1 className="text-3xl font-bold text-[#f5f5f7] mb-2">
             {questionnaire.client_name} - {questionnaire.product_name}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#86868b]">
             {getQuestionsByType(type)[0]?.title || 'Questionnaire'}
           </p>
           {lastSavedAt && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-[#86868b] mt-2">
               Last saved: {new Date(lastSavedAt).toLocaleString()}
             </p>
           )}
@@ -539,7 +550,7 @@ export default function QuestionnairePage({ params }: PageProps) {
           ))}
 
           {/* Action Buttons */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky bottom-0">
+          <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 sticky bottom-0">
             <div className="flex gap-4">
               <Button
                 type="button"
@@ -584,7 +595,7 @@ export default function QuestionnairePage({ params }: PageProps) {
               )}
             </div>
             {questionnaire.status === 'submitted' && (
-              <p className="text-sm text-gray-500 mt-3 text-center">
+              <p className="text-sm text-[#86868b] mt-3 text-center">
                 This questionnaire has already been submitted on{' '}
                 {questionnaire.submitted_at
                   ? new Date(questionnaire.submitted_at).toLocaleString()

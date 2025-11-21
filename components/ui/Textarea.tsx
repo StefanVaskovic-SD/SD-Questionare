@@ -1,6 +1,6 @@
 'use client';
 
-import { TextareaHTMLAttributes, forwardRef, useEffect, useRef } from 'react';
+import { TextareaHTMLAttributes, forwardRef, useEffect, useRef, useCallback } from 'react';
 import { cn } from '@/lib/cn';
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -10,20 +10,22 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, error, value, onChange, ...props }, ref) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const isControlled = value !== undefined;
 
-    // Combine refs
-    const combinedRef = (node: HTMLTextAreaElement | null) => {
-      textareaRef.current = node;
+    // Combine refs using useCallback
+    const combinedRef = useCallback((node: HTMLTextAreaElement | null) => {
+      // Store in our ref
+      (textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+      
+      // Call the forwarded ref
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
-        ref.current = node;
+        (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
       }
-    };
+    }, [ref]);
 
     // Auto-resize function
-    const adjustHeight = () => {
+    const adjustHeight = useCallback(() => {
       const textarea = textareaRef.current;
       if (!textarea) return;
 
@@ -31,20 +33,20 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       textarea.style.height = 'auto';
       // Set height to scrollHeight (content height)
       textarea.style.height = `${textarea.scrollHeight}px`;
-    };
+    }, []);
 
     // Adjust height on mount and when value changes
     useEffect(() => {
       adjustHeight();
-    }, [value]);
+    }, [value, adjustHeight]);
 
     // Handle onChange with auto-resize
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
       adjustHeight();
       if (onChange) {
         onChange(e);
       }
-    };
+    }, [onChange, adjustHeight]);
 
     return (
       <textarea

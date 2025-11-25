@@ -364,7 +364,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Feminine',
             rightLabel: 'Masculine',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -377,7 +377,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Simple',
             rightLabel: 'Complex',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -390,7 +390,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Youthful',
             rightLabel: 'Established',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -403,7 +403,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Subtle',
             rightLabel: 'Bright',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -416,7 +416,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Classic',
             rightLabel: 'Contemporary',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -429,7 +429,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Friendly',
             rightLabel: 'Authoritative',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -442,7 +442,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Economical',
             rightLabel: 'Expensive',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -455,7 +455,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Playful',
             rightLabel: 'Serious',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -468,7 +468,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Unconventional',
             rightLabel: 'Mainstream',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -481,7 +481,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Industrial',
             rightLabel: 'Natural',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -494,7 +494,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Approachable',
             rightLabel: 'Elite',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },
@@ -507,7 +507,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           sliderOptions: {
             leftLabel: 'Casual',
             rightLabel: 'Elegant',
-            min: 1,
+            min: 0,
             max: 10,
             defaultValue: 5,
           },

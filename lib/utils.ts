@@ -71,7 +71,9 @@ export function replacePlaceholders(
     .replace(/\[client\]/g, clientName)
     .replace(/\{\{client\}\}/g, clientName)
     .replace(/\[product\]/g, productName)
-    .replace(/\{\{product\}\}/g, productName);
+    .replace(/\{\{product\}\}/g, productName)
+    .replace(/\[brand\]/g, productName) // For brand design, [brand] = productName
+    .replace(/\{\{brand\}\}/g, productName);
 }
 
 /**

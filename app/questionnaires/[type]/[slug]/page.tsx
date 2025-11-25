@@ -59,6 +59,11 @@ export default function QuestionnairePage({ params }: PageProps) {
         schemaFields[question.key] = question.required
           ? z.array(z.string()).min(1, 'At least one file is required')
           : z.array(z.string()).optional();
+      } else if (question.type === 'multiple-inputs' || question.type === 'slider') {
+        // For multiple-inputs and slider, validate as string
+        schemaFields[question.key] = question.required
+          ? z.string().min(1, 'This field is required')
+          : z.string().optional();
       } else {
         // For regular fields
         schemaFields[question.key] = question.required
@@ -446,7 +451,13 @@ export default function QuestionnairePage({ params }: PageProps) {
 
           return {
             section: section.title,
-            question: question.label.replace(/\[client\]/g, questionnaire.client_name).replace(/\{\{client\}\}/g, questionnaire.client_name),
+            question: question.label
+              .replace(/\[client\]/g, questionnaire.client_name)
+              .replace(/\{\{client\}\}/g, questionnaire.client_name)
+              .replace(/\[product\]/g, questionnaire.product_name)
+              .replace(/\{\{product\}\}/g, questionnaire.product_name)
+              .replace(/\[brand\]/g, questionnaire.product_name)
+              .replace(/\{\{brand\}\}/g, questionnaire.product_name),
             answer,
             files,
           };

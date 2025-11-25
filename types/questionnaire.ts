@@ -10,7 +10,7 @@ export type QuestionnaireType =
 export type QuestionnaireCategory = 'product-design' | 'web-design' | 'brand-design' | 'motion';
 export type QuestionnaireSubType = 'new' | 'redesign' | 'rebrand';
 export type QuestionnaireStatus = 'not-started' | 'in-progress' | 'submitted';
-export type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file' | 'subfields';
+export type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file' | 'subfields' | 'multiple-inputs' | 'slider';
 
 export interface Questionnaire {
   id: string;
@@ -53,6 +53,19 @@ export interface QuestionConfig {
   subfields?: {
     primary: { key: string; label: string };
     secondary: { key: string; label: string };
+  };
+  multipleInputs?: {
+    // For multiple inputs that combine into one sentence
+    template: string; // e.g., "We help {0} to {1} by {2}."
+    inputs: Array<{ key: string; label: string; placeholder?: string }>;
+  };
+  sliderOptions?: {
+    // For slider scale questions
+    leftLabel: string;
+    rightLabel: string;
+    min?: number; // default 1
+    max?: number; // default 10
+    defaultValue?: number; // default 5
   };
 }
 

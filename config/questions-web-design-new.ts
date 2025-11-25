@@ -132,7 +132,7 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           label: 'What are their specific needs and challenges when looking for your solutions? What problem do you solve for them?',
           type: 'subfields',
           required: false,
-          helper: '',
+          helper: 'Identifying their pain points allows for the development of targeted solutions that directly address their most pressing issues.',
           subfields: {
             primary: {
               key: 'needs_challenges_primary',
@@ -170,7 +170,7 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
           label: 'What are the key goals or aspirations of your target audience when using your product or service?',
           type: 'textarea',
           required: false,
-          helper: '',
+          helper: 'Knowing their goals ensures that the product or service is positioned as a solution that helps them achieve their desired outcomes.',
         },
       ],
     },

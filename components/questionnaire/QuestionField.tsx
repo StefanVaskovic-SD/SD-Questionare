@@ -3,6 +3,8 @@
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { FileUpload } from './FileUpload';
+import { MultipleInputs } from './MultipleInputs';
+import { SliderScale } from './SliderScale';
 import { replacePlaceholders } from '@/lib/utils';
 import type { QuestionConfig } from '@/types/questionnaire';
 
@@ -87,6 +89,61 @@ export function QuestionField({
           </div>
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
+      </div>
+    );
+  }
+
+  // Handle multiple inputs (sentence builder)
+  if (question.type === 'multiple-inputs' && question.multipleInputs) {
+    return (
+      <div data-question-key={question.key}>
+        <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+          {label}
+          {question.required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+        {helper && (
+          <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
+        )}
+        <MultipleInputs
+          questionKey={question.key}
+          template={question.multipleInputs.template}
+          inputs={question.multipleInputs.inputs}
+          value={value}
+          onChange={onChange}
+          error={error}
+          clientName={clientName}
+          productName={productName}
+        />
+      </div>
+    );
+  }
+
+  // Handle slider scale
+  if (question.type === 'slider' && question.sliderOptions) {
+    return (
+      <div data-question-key={question.key}>
+        {label && (
+          <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+            {label}
+            {question.required && <span className="text-red-500 ml-1">*</span>}
+          </label>
+        )}
+        {helper && (
+          <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
+        )}
+        <SliderScale
+          questionKey={question.key}
+          leftLabel={question.sliderOptions.leftLabel}
+          rightLabel={question.sliderOptions.rightLabel}
+          min={question.sliderOptions.min}
+          max={question.sliderOptions.max}
+          defaultValue={question.sliderOptions.defaultValue}
+          value={value}
+          onChange={onChange}
+          error={error}
+          clientName={clientName}
+          productName={productName}
+        />
       </div>
     );
   }

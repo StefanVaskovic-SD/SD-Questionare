@@ -39,6 +39,14 @@ export function QuestionSection({
             (index === 0 || !section.questions[index - 1]?.groupTitle || 
              section.questions[index - 1]?.groupTitle !== question.groupTitle);
           
+          // Hide file upload for existing brand materials if not rebrand
+          if (question.key === 'existing_brand_materials' && question.type === 'file') {
+            const isRebrand = questionnaireType?.includes('rebrand');
+            if (!isRebrand) {
+              return null;
+            }
+          }
+          
           return (
             <div key={question.key}>
               {showGroupTitle && question.groupTitle && (

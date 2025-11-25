@@ -16,14 +16,14 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
       questions: [
         {
           key: 'mission_vision',
-          label: 'What is the mission and vision of [client]?',
+          label: 'What is the mission and vision of [product]?',
           type: 'textarea',
           required: false,
           helper: 'Understanding the mission and vision helps to align strategic recommendations with the core values and long-term aspirations of the business.',
         },
         {
           key: 'products_services_offered',
-          label: 'What products or services does [client] offer specifically?',
+          label: 'What products or services does [product] offer specifically?',
           type: 'textarea',
           required: false,
           helper: 'Clarifying the specific products or services helps ensure that the strategy aligns with the core offerings and capabilities of the business.',
@@ -51,14 +51,14 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         },
         {
           key: 'high_profile_clients',
-          label: 'How does [client] tailor its solutions to meet the specific needs of high-profile clients?',
+          label: 'How does [product] tailor its solutions to meet the specific needs of high-profile clients?',
           type: 'textarea',
           required: false,
           helper: 'Understanding how high-profile clients\' needs are met showcases the company\'s ability to deliver premium, customized services, crucial for brand positioning.',
         },
         {
           key: 'differentiation',
-          label: 'What sets [client] apart from competitors?',
+          label: 'What sets [product] apart from competitors?',
           type: 'textarea',
           required: false,
           helper: 'Defining the unique selling points is essential for differentiating the client in a competitive marketplace and establishing a strong brand identity.',
@@ -72,7 +72,7 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         },
         {
           key: 'market_challenges',
-          label: 'What are the main challenges [client] faces in the market?',
+          label: 'What are the main challenges [product] faces in the market?',
           type: 'textarea',
           required: false,
           helper: 'Identifying market challenges allows for the development of strategies that address obstacles and capitalize on opportunities for growth.',
@@ -193,7 +193,7 @@ export const WEB_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         },
         {
           key: 'evaluation_factors',
-          label: 'What factors do potential customers consider when evaluating [client] solutions?',
+          label: 'What factors do potential customers consider when evaluating [product] solutions?',
           type: 'textarea',
           required: false,
         },

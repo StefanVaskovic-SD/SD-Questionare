@@ -16,10 +16,9 @@ export function PurposeGoalSection({ purpose, goal }: PurposeGoalSectionProps) {
 
   // If only one box exists, use single column; otherwise use two columns
   const gridCols = purpose && goal ? 'md:grid-cols-2' : 'md:grid-cols-1';
-  const maxWidth = purpose && goal ? '' : 'max-w-2xl mx-auto';
 
   return (
-    <div className={`grid ${gridCols} gap-6 mb-8 ${maxWidth}`}>
+    <div className={`grid ${gridCols} gap-6 mb-8`}>
       {purpose && (
         <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6">
           <h3 className="text-xl font-semibold text-[#f5f5f7] mb-4">{purpose.title}</h3>

@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <PasswordProtection>
-          {children}
+        {children}
         </PasswordProtection>
         <Toaster position="top-right" />
       </body>

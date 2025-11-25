@@ -75,11 +75,11 @@ export default function SuccessPage({ params }: PageProps) {
             <CheckCircle className="w-16 h-16 text-[#6295ff]" />
           </div>
           <h1 className="text-3xl font-bold text-[#f5f5f7] mb-4">
-            Thank You!
-          </h1>
+          Thank You!
+        </h1>
           <p className="text-[#86868b]">
-            Your questionnaire has been submitted successfully. We&apos;ll review your responses and get back to you soon.
-          </p>
+          Your questionnaire has been submitted successfully. We&apos;ll review your responses and get back to you soon.
+        </p>
         </div>
       </div>
     </div>

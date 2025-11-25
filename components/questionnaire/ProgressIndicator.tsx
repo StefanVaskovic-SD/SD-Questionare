@@ -7,8 +7,10 @@ interface ProgressIndicatorProps {
 
 export function ProgressIndicator({ sections, values }: ProgressIndicatorProps) {
   const allQuestions = sections.flatMap((section) => section.questions);
-  const totalQuestions = allQuestions.length;
-  const answeredQuestions = allQuestions.filter((question) => {
+  // Exclude slider questions from progress calculation (they have default values)
+  const questionsForProgress = allQuestions.filter((question) => question.type !== 'slider');
+  const totalQuestions = questionsForProgress.length;
+  const answeredQuestions = questionsForProgress.filter((question) => {
     const value = values[question.key];
     if (Array.isArray(value)) {
       return value.some((v) => v && v.trim() !== '');

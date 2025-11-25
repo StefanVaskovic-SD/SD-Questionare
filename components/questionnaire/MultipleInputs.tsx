@@ -113,8 +113,8 @@ export function MultipleInputs({
   }
 
   return (
-    <div className="space-y-4" data-question-key={questionKey}>
-      <div className="flex flex-wrap items-center justify-center gap-2 text-base">
+    <div className="space-y-4 pb-4" data-question-key={questionKey}>
+      <div className="flex flex-wrap items-center gap-2 text-base">
         {templateParts.map((part, partIndex) => {
           if (part.type === 'text') {
             return (

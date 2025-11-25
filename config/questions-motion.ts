@@ -8,7 +8,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 1: PROJECT & OBJECTIVES
     // ========================================
     {
-      title: 'PROJECT & OBJECTIVES',
+      title: 'Project & objectives',
       questions: [
         {
           key: 'main_idea_message',
@@ -52,7 +52,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 2: VISUAL MATERIALS & CONTENT
     // ========================================
     {
-      title: 'VISUAL MATERIALS & CONTENT',
+      title: 'Visual materials & content',
       questions: [
         {
           key: 'materials_to_use',
@@ -104,7 +104,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 3: BRAND & IDENTITY
     // ========================================
     {
-      title: 'BRAND & IDENTITY',
+      title: 'Brand & identity',
       questions: [
         {
           key: 'brand_guidelines_url',
@@ -139,7 +139,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 4: AUDIO & NARRATION
     // ========================================
     {
-      title: 'AUDIO & NARRATION',
+      title: 'Audio & narration',
       questions: [
         {
           key: 'voice_over_needed',
@@ -240,7 +240,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 5: TECHNICAL SPECIFICATIONS
     // ========================================
     {
-      title: 'TECHNICAL SPECIFICATIONS',
+      title: 'Technical specifications',
       questions: [
         {
           key: 'video_length',
@@ -309,7 +309,7 @@ export const MOTION_CONFIG: QuestionnaireConfig = {
     // SECTION 6: ADDITIONAL
     // ========================================
     {
-      title: 'ADDITIONAL',
+      title: 'Additional',
       questions: [
         {
           key: 'target_date',

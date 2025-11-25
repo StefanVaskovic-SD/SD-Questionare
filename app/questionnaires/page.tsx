@@ -6,7 +6,7 @@ import Image from 'next/image';
 export default function QuestionnairesPage() {
   return (
     <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
-      <div className="max-w-[52rem] w-full">
+      <div className="max-w-[70rem] w-full">
         <div className="flex flex-col items-center mb-12">
           <Image
             src="/sd-logo.svg"

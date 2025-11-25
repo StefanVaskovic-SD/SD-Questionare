@@ -114,7 +114,7 @@ export function MultipleInputs({
 
   return (
     <div className="space-y-4" data-question-key={questionKey}>
-      <div className="flex flex-wrap items-center gap-2 text-base">
+      <div className="flex flex-wrap items-center justify-center gap-2 text-base">
         {templateParts.map((part, partIndex) => {
           if (part.type === 'text') {
             return (
@@ -128,7 +128,7 @@ export function MultipleInputs({
             const label = input.label.replace(/[\[\]]/g, ''); // Remove brackets from label
             
             return (
-              <div key={partIndex} className="inline-flex flex-col items-start">
+              <div key={partIndex} className="inline-flex flex-col items-center relative">
                 <input
                   ref={(el) => {
                     inputRefs.current[inputIndex] = el;
@@ -149,7 +149,7 @@ export function MultipleInputs({
                   className="min-w-[120px] px-2 py-1 bg-[#1a1a1a] border border-[#2a2a2a] rounded text-[#f5f5f7] placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-offset-0 transition-colors focus:border-[#6295ff] focus:ring-[#6295ff]"
                   style={{ width: 'auto' }}
                 />
-                <span className="text-xs text-[#86868b] mt-1">{label}</span>
+                <span className="text-xs text-[#86868b] mt-1 absolute top-full">{label}</span>
               </div>
             );
           }

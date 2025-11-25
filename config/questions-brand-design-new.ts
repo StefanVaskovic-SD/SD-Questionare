@@ -26,7 +26,7 @@ export const BRAND_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         },
         {
           key: 'help_sentence',
-          label: 'Complete this sentence: "We help _______ [target audience] to _______ [achieve what] by _______ [how]."',
+          label: 'Complete this sentence:',
           type: 'multiple-inputs',
           required: false,
           multipleInputs: {

@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/Textarea';
 import { FileUpload } from './FileUpload';
 import { MultipleInputs } from './MultipleInputs';
 import { SliderScale } from './SliderScale';
+import { RadioGroup } from './RadioGroup';
+import { CheckboxGroup } from './CheckboxGroup';
 import { replacePlaceholders } from '@/lib/utils';
 import type { QuestionConfig } from '@/types/questionnaire';
 
@@ -170,6 +172,56 @@ export function QuestionField({
           questionnaireSlug={questionnaireSlug}
         />
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      </div>
+    );
+  }
+
+  // Handle radio buttons
+  if (question.type === 'radio' && question.radioOptions) {
+    return (
+      <div data-question-key={question.key}>
+        <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+          {label}
+          {question.required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+        {helper && (
+          <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
+        )}
+        <RadioGroup
+          questionKey={question.key}
+          options={question.radioOptions.options}
+          value={Array.isArray(value) ? value[0] || '' : value || ''}
+          onChange={(val) => onChange(val)}
+          allowOther={question.radioOptions.allowOther}
+          error={error}
+          clientName={clientName}
+          productName={productName}
+        />
+      </div>
+    );
+  }
+
+  // Handle checkbox/multiselect
+  if ((question.type === 'checkbox' || question.type === 'multiselect') && question.checkboxOptions) {
+    return (
+      <div data-question-key={question.key}>
+        <label className="block text-sm font-medium text-[#f5f5f7] mb-2">
+          {label}
+          {question.required && <span className="text-red-500 ml-1">*</span>}
+        </label>
+        {helper && (
+          <p className="text-sm text-[#86868b] italic mb-3">{helper}</p>
+        )}
+        <CheckboxGroup
+          questionKey={question.key}
+          options={question.checkboxOptions.options}
+          value={value}
+          onChange={onChange}
+          allowOther={question.checkboxOptions.allowOther}
+          error={error}
+          clientName={clientName}
+          productName={productName}
+        />
       </div>
     );
   }

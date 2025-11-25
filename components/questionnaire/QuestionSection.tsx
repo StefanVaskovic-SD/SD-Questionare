@@ -1,4 +1,4 @@
-import type { SectionConfig } from '@/types/questionnaire';
+import type { SectionConfig, QuestionConfig } from '@/types/questionnaire';
 import { QuestionField } from './QuestionField';
 
 interface QuestionSectionProps {
@@ -10,6 +10,31 @@ interface QuestionSectionProps {
   productName: string;
   questionnaireType?: string;
   questionnaireSlug?: string;
+}
+
+// Helper function to check if conditional field should be shown
+function shouldShowConditionalField(
+  question: QuestionConfig,
+  values: Record<string, string | string[]>
+): boolean {
+  if (!question.conditionalFields) return true;
+  
+  const { dependsOn, showIf } = question.conditionalFields;
+  const dependentValue = values[dependsOn];
+  
+  if (Array.isArray(showIf)) {
+    // Multiple values trigger showing
+    if (Array.isArray(dependentValue)) {
+      return dependentValue.some((v) => showIf.includes(v));
+    }
+    return showIf.includes(String(dependentValue));
+  } else {
+    // Single value triggers showing
+    if (Array.isArray(dependentValue)) {
+      return dependentValue.includes(showIf);
+    }
+    return String(dependentValue) === showIf;
+  }
 }
 
 export function QuestionSection({
@@ -47,6 +72,11 @@ export function QuestionSection({
             }
           }
           
+          // Check conditional field display
+          if (!shouldShowConditionalField(question, values)) {
+            return null;
+          }
+          
           return (
             <div key={question.key}>
               {showGroupTitle && question.groupTitle && (
@@ -64,6 +94,26 @@ export function QuestionSection({
                 questionnaireType={questionnaireType}
                 questionnaireSlug={questionnaireSlug}
               />
+              {/* Render conditional fields if this question has them */}
+              {question.conditionalFields?.fields.map((conditionalQuestion) => {
+                if (!shouldShowConditionalField(conditionalQuestion, values)) {
+                  return null;
+                }
+                return (
+                  <div key={conditionalQuestion.key} className="mt-4 ml-4 pl-4 border-l-2 border-[#2a2a2a]">
+                    <QuestionField
+                      question={conditionalQuestion}
+                      value={values[conditionalQuestion.key] || ''}
+                      onChange={(value) => onChange(conditionalQuestion.key, value)}
+                      error={errors[conditionalQuestion.key]}
+                      clientName={clientName}
+                      productName={productName}
+                      questionnaireType={questionnaireType}
+                      questionnaireSlug={questionnaireSlug}
+                    />
+                  </div>
+                );
+              })}
             </div>
           );
         })}

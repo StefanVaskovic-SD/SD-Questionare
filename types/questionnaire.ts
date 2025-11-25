@@ -10,7 +10,7 @@ export type QuestionnaireType =
 export type QuestionnaireCategory = 'product-design' | 'web-design' | 'brand-design' | 'motion';
 export type QuestionnaireSubType = 'new' | 'redesign' | 'rebrand';
 export type QuestionnaireStatus = 'not-started' | 'in-progress' | 'submitted';
-export type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file' | 'subfields' | 'multiple-inputs' | 'slider';
+export type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file' | 'subfields' | 'multiple-inputs' | 'slider' | 'radio' | 'checkbox' | 'multiselect';
 
 export interface Questionnaire {
   id: string;
@@ -66,6 +66,22 @@ export interface QuestionConfig {
     min?: number; // default 1
     max?: number; // default 10
     defaultValue?: number; // default 5
+  };
+  radioOptions?: {
+    // For radio button questions
+    options: Array<{ value: string; label: string }>;
+    allowOther?: boolean; // If true, shows "Other: ______" input field
+  };
+  checkboxOptions?: {
+    // For checkbox/multiselect questions
+    options: Array<{ value: string; label: string }>;
+    allowOther?: boolean; // If true, shows "Other: ______" input field
+  };
+  conditionalFields?: {
+    // For conditional field display
+    dependsOn: string; // Key of the question this depends on
+    showIf: string | string[]; // Value(s) that trigger showing this question
+    fields: QuestionConfig[]; // Fields to show conditionally
   };
 }
 

@@ -64,6 +64,16 @@ export default function QuestionnairePage({ params }: PageProps) {
         schemaFields[question.key] = question.required
           ? z.string().min(1, 'This field is required')
           : z.string().optional();
+      } else if (question.type === 'radio') {
+        // For radio buttons, validate as string
+        schemaFields[question.key] = question.required
+          ? z.string().min(1, 'Please select an option')
+          : z.string().optional();
+      } else if (question.type === 'checkbox' || question.type === 'multiselect') {
+        // For checkbox/multiselect, validate as array
+        schemaFields[question.key] = question.required
+          ? z.array(z.string()).min(1, 'Please select at least one option')
+          : z.array(z.string()).optional();
       } else {
         // For regular fields
         schemaFields[question.key] = question.required
@@ -438,6 +448,26 @@ export default function QuestionnairePage({ params }: PageProps) {
                 return `${label}: ${v || '(empty)'}`;
               })
               .join('\n');
+          } else if (question.type === 'radio' && question.radioOptions) {
+            // For radio buttons, format the selected option
+            const selectedValue = Array.isArray(value) ? value[0] || '' : value || '';
+            if (selectedValue.startsWith('other:')) {
+              answer = `Other: ${selectedValue.replace(/^other:/, '')}`;
+            } else {
+              const option = question.radioOptions.options.find((opt) => opt.value === selectedValue);
+              answer = option ? option.label : selectedValue;
+            }
+          } else if ((question.type === 'checkbox' || question.type === 'multiselect') && question.checkboxOptions) {
+            // For checkbox/multiselect, format selected options
+            const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
+            const formattedOptions = selectedValues.map((val) => {
+              if (val.startsWith('other:')) {
+                return `Other: ${val.replace(/^other:/, '')}`;
+              }
+              const option = question.checkboxOptions?.options.find((opt) => opt.value === val);
+              return option ? option.label : val;
+            });
+            answer = formattedOptions.join(', ');
           } else {
             // Ensure value is string
             if (Array.isArray(value)) {

@@ -21,7 +21,7 @@ export function FileUpload({
   value,
   onChange,
   error,
-  questionnaireType = 'product-design',
+  questionnaireType = 'product-design-new',
   questionnaireSlug = 'default',
 }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);

@@ -567,6 +567,8 @@ export default function QuestionnairePage({ params }: PageProps) {
           <PurposeGoalSection
             purpose={questionnaireConfig.purpose}
             goal={questionnaireConfig.goal}
+            clientName={questionnaire.client_name}
+            productName={questionnaire.product_name}
           />
         )}
 

@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
+import { getQuestionnaireConfig } from '@/config/questions';
+import { replacePlaceholders } from '@/lib/utils';
+import type { Questionnaire } from '@/types/questionnaire';
 
 interface PageProps {
   params: {
@@ -18,6 +21,7 @@ export default function SuccessPage({ params }: PageProps) {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const [verified, setVerified] = useState(false);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
 
   useEffect(() => {
     async function verifyAccess() {
@@ -40,6 +44,7 @@ export default function SuccessPage({ params }: PageProps) {
           return;
         }
 
+        setQuestionnaire(data);
         setVerified(true);
       } catch (error) {
         router.push('/questionnaires');
@@ -59,6 +64,16 @@ export default function SuccessPage({ params }: PageProps) {
     );
   }
 
+  // Get custom thank you message from config
+  const questionnaireConfig = questionnaire ? getQuestionnaireConfig(params.type) : null;
+  const thankYouMessage = questionnaireConfig?.thankYouMessage 
+    ? replacePlaceholders(
+        questionnaireConfig.thankYouMessage,
+        questionnaire?.client_name || '',
+        questionnaire?.product_name || ''
+      )
+    : 'Your questionnaire has been submitted successfully. We\'ll review your responses and get back to you soon.';
+
   return (
     <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
@@ -75,11 +90,11 @@ export default function SuccessPage({ params }: PageProps) {
             <CheckCircle className="w-16 h-16 text-[#6295ff]" />
           </div>
           <h1 className="text-3xl font-bold text-[#f5f5f7] mb-4">
-          Thank You!
-        </h1>
-          <p className="text-[#86868b]">
-          Your questionnaire has been submitted successfully. We&apos;ll review your responses and get back to you soon.
-        </p>
+            Thank You!
+          </h1>
+          <p className="text-[#86868b] whitespace-pre-line">
+            {thankYouMessage}
+          </p>
         </div>
       </div>
     </div>

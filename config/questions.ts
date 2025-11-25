@@ -4,6 +4,7 @@ import { PRODUCT_DESIGN_REDESIGN_CONFIG } from './questions-product-design-redes
 import { WEB_DESIGN_NEW_CONFIG } from './questions-web-design-new';
 import { WEB_DESIGN_REDESIGN_CONFIG } from './questions-web-design-redesign';
 import { BRAND_DESIGN_NEW_CONFIG } from './questions-brand-design-new';
+import { BRAND_DESIGN_REBRAND_CONFIG } from './questions-brand-design-rebrand';
 
 // Legacy structure - keeping for backward compatibility
 export const PRODUCT_DESIGN_QUESTIONS: SectionConfig[] = [
@@ -468,6 +469,9 @@ export function getQuestionsByType(type: string): SectionConfig[] {
   if (type === 'brand-design-new') {
     return BRAND_DESIGN_NEW_CONFIG.sections;
   }
+  if (type === 'brand-design-rebrand') {
+    return BRAND_DESIGN_REBRAND_CONFIG.sections;
+  }
   if (type.startsWith('brand-design')) {
     return BRAND_DESIGN_QUESTIONS;
   }
@@ -494,6 +498,9 @@ export function getQuestionnaireConfig(type: string): QuestionnaireConfig | null
   }
   if (type === 'brand-design-new') {
     return BRAND_DESIGN_NEW_CONFIG;
+  }
+  if (type === 'brand-design-rebrand') {
+    return BRAND_DESIGN_REBRAND_CONFIG;
   }
   // For other types, return null (will use default structure)
   return null;

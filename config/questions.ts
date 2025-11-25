@@ -1,5 +1,7 @@
-import type { QuestionConfig, SectionConfig } from '@/types/questionnaire';
+import type { QuestionConfig, SectionConfig, QuestionnaireConfig } from '@/types/questionnaire';
+import { PRODUCT_DESIGN_NEW_CONFIG } from './questions-product-design-new';
 
+// Legacy structure - keeping for backward compatibility
 export const PRODUCT_DESIGN_QUESTIONS: SectionConfig[] = [
   // ========================================
   // SECTION 1: About the company
@@ -439,16 +441,33 @@ export function getQuestionByKey(sections: SectionConfig[], key: string): Questi
 }
 
 // Get questions by type
-export function getQuestionsByType(type: 'product-design' | 'web-design' | 'brand-design'): SectionConfig[] {
-  switch (type) {
-    case 'product-design':
-      return PRODUCT_DESIGN_QUESTIONS;
-    case 'web-design':
-      return WEB_DESIGN_QUESTIONS;
-    case 'brand-design':
-      return BRAND_DESIGN_QUESTIONS;
-    default:
-      return [];
+export function getQuestionsByType(type: string): SectionConfig[] {
+  // Map new type format to question sets
+  if (type === 'product-design-new') {
+    return PRODUCT_DESIGN_NEW_CONFIG.sections;
   }
+  if (type.startsWith('product-design')) {
+    return PRODUCT_DESIGN_QUESTIONS;
+  }
+  if (type.startsWith('web-design')) {
+    return WEB_DESIGN_QUESTIONS;
+  }
+  if (type.startsWith('brand-design')) {
+    return BRAND_DESIGN_QUESTIONS;
+  }
+  if (type === 'motion') {
+    // TODO: Add MOTION_QUESTIONS when provided
+    return [];
+  }
+  return [];
+}
+
+// Get questionnaire config (includes title, purpose, goal, thank you message)
+export function getQuestionnaireConfig(type: string): QuestionnaireConfig | null {
+  if (type === 'product-design-new') {
+    return PRODUCT_DESIGN_NEW_CONFIG;
+  }
+  // For other types, return null (will use default structure)
+  return null;
 }
 

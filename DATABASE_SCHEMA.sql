@@ -6,7 +6,15 @@ CREATE TABLE questionnaires (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   
   -- Type of questionnaire
-  type TEXT NOT NULL CHECK (type IN ('product-design', 'web-design', 'brand-design')),
+  type TEXT NOT NULL CHECK (type IN (
+    'product-design-new',
+    'product-design-redesign',
+    'web-design-new',
+    'web-design-redesign',
+    'brand-design-new',
+    'brand-design-rebrand',
+    'motion'
+  )),
   
   -- Client information
   client_name TEXT NOT NULL,

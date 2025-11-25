@@ -20,7 +20,7 @@ export default function QuestionnairesPage() {
           </h1>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/questionnaires/product-design"
             className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-8 hover:border-[#6295ff] transition-colors text-center group"
@@ -54,6 +54,18 @@ export default function QuestionnairesPage() {
             </h2>
             <p className="text-[#86868b]">
               Create a brand design questionnaire
+            </p>
+          </Link>
+
+          <Link
+            href="/questionnaires/motion"
+            className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-8 hover:border-[#6295ff] transition-colors text-center group"
+          >
+            <h2 className="text-2xl font-semibold text-[#f5f5f7] mb-4 group-hover:text-[#6295ff] transition-colors">
+              Motion
+            </h2>
+            <p className="text-[#86868b]">
+              Create a motion design questionnaire
             </p>
           </Link>
         </div>

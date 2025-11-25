@@ -1,4 +1,14 @@
-export type QuestionnaireType = 'product-design' | 'web-design' | 'brand-design';
+export type QuestionnaireType = 
+  | 'product-design-new' 
+  | 'product-design-redesign'
+  | 'web-design-new'
+  | 'web-design-redesign'
+  | 'brand-design-new'
+  | 'brand-design-rebrand'
+  | 'motion';
+
+export type QuestionnaireCategory = 'product-design' | 'web-design' | 'brand-design' | 'motion';
+export type QuestionnaireSubType = 'new' | 'redesign' | 'rebrand';
 export type QuestionnaireStatus = 'not-started' | 'in-progress' | 'submitted';
 export type QuestionType = 'text' | 'textarea' | 'url' | 'email' | 'file' | 'subfields';
 
@@ -39,6 +49,7 @@ export interface QuestionConfig {
   required: boolean;
   placeholder?: string;
   helper?: string;
+  groupTitle?: string; // For {fields small title} - small title for a group of fields
   subfields?: {
     primary: { key: string; label: string };
     secondary: { key: string; label: string };
@@ -48,7 +59,23 @@ export interface QuestionConfig {
 export interface SectionConfig {
   title: string;
   intro?: string;
+  description?: string; // For {desc paragraph}
   questions: QuestionConfig[];
+}
+
+export interface QuestionnaireConfig {
+  title: string;
+  subtitle?: string;
+  purpose?: {
+    title: string;
+    content: string;
+  };
+  goal?: {
+    title: string;
+    content: string;
+  };
+  sections: SectionConfig[];
+  thankYouMessage?: string;
 }
 
 export interface WebhookPayload {

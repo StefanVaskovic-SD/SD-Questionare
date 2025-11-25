@@ -7,9 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Radio } from '@/components/ui/Radio';
 import { supabase } from '@/lib/supabase';
 import { generateUniqueSlug, generateAccessToken, getQuestionnaireUrl } from '@/lib/utils';
-import type { QuestionnaireType } from '@/types/questionnaire';
+import type { QuestionnaireType, QuestionnaireCategory } from '@/types/questionnaire';
 import toast from 'react-hot-toast';
 import { Copy, Check } from 'lucide-react';
 import Image from 'next/image';
@@ -17,6 +18,7 @@ import Image from 'next/image';
 const createQuestionnaireSchema = z.object({
   client_name: z.string().min(2, 'Client name must be at least 2 characters'),
   product_name: z.string().min(2, 'Product name must be at least 2 characters'),
+  sub_type: z.enum(['new', 'redesign', 'rebrand']),
 });
 
 type CreateQuestionnaireForm = z.infer<typeof createQuestionnaireSchema>;
@@ -33,26 +35,55 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
   const [createdLink, setCreatedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const type = params.type as QuestionnaireType;
+  const category = params.type as QuestionnaireCategory;
 
   // Initialize form hook before any conditional returns
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CreateQuestionnaireForm>({
     resolver: zodResolver(createQuestionnaireSchema),
+    defaultValues: {
+      sub_type: category === 'brand-design' ? 'new' : 'new',
+    },
   });
 
-  // Validate questionnaire type
-  const validTypes: QuestionnaireType[] = ['product-design', 'web-design', 'brand-design'];
-  if (!validTypes.includes(type)) {
+  // Get sub-type options based on category
+  const getSubTypeOptions = (cat: QuestionnaireCategory) => {
+    switch (cat) {
+      case 'product-design':
+        return [
+          { value: 'new', label: 'New Product' },
+          { value: 'redesign', label: 'Redesign of the existing product' },
+        ];
+      case 'web-design':
+        return [
+          { value: 'new', label: 'New Website' },
+          { value: 'redesign', label: 'Redesign' },
+        ];
+      case 'brand-design':
+        return [
+          { value: 'new', label: 'New Brand Identity' },
+          { value: 'rebrand', label: 'Rebrand' },
+        ];
+      case 'motion':
+        return []; // Motion doesn't have sub-types
+      default:
+        return [];
+    }
+  };
+
+  // Validate questionnaire category
+  const validCategories: QuestionnaireCategory[] = ['product-design', 'web-design', 'brand-design', 'motion'];
+  if (!validCategories.includes(category)) {
     return (
       <div className="min-h-screen bg-[#080808] flex items-center justify-center p-4">
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8 max-w-md w-full text-center">
-          <h1 className="text-2xl font-bold text-[#f5f5f7] mb-4">Invalid Questionnaire Type</h1>
+          <h1 className="text-2xl font-bold text-[#f5f5f7] mb-4">Invalid Questionnaire Category</h1>
           <p className="text-[#86868b] mb-6">
-            The questionnaire type &quot;{type}&quot; is not valid.
+            The questionnaire category &quot;{category}&quot; is not valid.
           </p>
           <Button onClick={() => router.push('/questionnaires')}>
             Go Back
@@ -65,8 +96,16 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
   const onSubmit = async (data: CreateQuestionnaireForm) => {
     setIsLoading(true);
     try {
+      // Build full type from category and sub-type
+      let fullType: QuestionnaireType;
+      if (category === 'motion') {
+        fullType = 'motion';
+      } else {
+        fullType = `${category}-${data.sub_type}` as QuestionnaireType;
+      }
+      
       // Generate unique slug
-      const slug = await generateUniqueSlug(data.client_name, type);
+      const slug = await generateUniqueSlug(data.client_name, fullType);
       
       // Generate access token
       const accessToken = generateAccessToken();
@@ -75,7 +114,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
       const { data: questionnaire, error } = await supabase
         .from('questionnaires')
         .insert({
-          type,
+          type: fullType,
           client_name: data.client_name,
           product_name: data.product_name,
           slug,
@@ -90,7 +129,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
       }
 
       // Generate shareable link
-      const link = getQuestionnaireUrl(type, slug, accessToken);
+      const link = getQuestionnaireUrl(fullType, slug, accessToken);
       setCreatedLink(link);
       toast.success('Questionnaire created successfully!');
     } catch (error) {
@@ -118,12 +157,15 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
     }
   };
 
-  const getTypeDisplayName = (type: QuestionnaireType): string => {
-    return type
+  const getCategoryDisplayName = (cat: QuestionnaireCategory): string => {
+    return cat
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
+
+  const subTypeOptions = getSubTypeOptions(category);
+  const selectedSubType = watch('sub_type');
 
   if (createdLink) {
     return (
@@ -202,7 +244,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
         </div>
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg p-8">
           <h1 className="text-3xl font-bold text-[#f5f5f7] mb-2 text-center">
-            Create {getTypeDisplayName(type)} Questionnaire
+            Create {getCategoryDisplayName(category)} Questionnaire
           </h1>
           <p className="text-[#86868b] text-center mb-8">
             Fill in the details to create a new questionnaire
@@ -238,6 +280,29 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
                 <p className="mt-1 text-sm text-red-600">{errors.product_name.message}</p>
               )}
             </div>
+
+            {subTypeOptions.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-[#f5f5f7] mb-3">
+                  Type <span className="text-red-500">*</span>
+                </label>
+                <div className="space-y-3">
+                  {subTypeOptions.map((option) => (
+                    <Radio
+                      key={option.value}
+                      {...register('sub_type')}
+                      value={option.value}
+                      label={option.label}
+                      error={!!errors.sub_type}
+                      checked={selectedSubType === option.value}
+                    />
+                  ))}
+                </div>
+                {errors.sub_type && (
+                  <p className="mt-1 text-sm text-red-600">{errors.sub_type.message}</p>
+                )}
+              </div>
+            )}
 
             <div className="flex gap-4">
               <Button

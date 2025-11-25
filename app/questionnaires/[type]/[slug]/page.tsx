@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/Button';
 import { QuestionSection } from '@/components/questionnaire/QuestionSection';
 import { ProgressIndicator } from '@/components/questionnaire/ProgressIndicator';
 import { supabase } from '@/lib/supabase';
-import { getQuestionsByType, getAllQuestions } from '@/config/questions';
+import { getQuestionsByType, getAllQuestions, getQuestionnaireConfig } from '@/config/questions';
+import { PurposeGoalSection } from '@/components/questionnaire/PurposeGoalSection';
 import { triggerWebhook } from '@/lib/webhook';
 import type { Questionnaire, QuestionnaireType, QuestionConfig } from '@/types/questionnaire';
 import toast from 'react-hot-toast';
@@ -38,6 +39,7 @@ export default function QuestionnairePage({ params }: PageProps) {
   const type = params.type as QuestionnaireType;
   const sections = getQuestionsByType(type);
   const allQuestions = getAllQuestions(sections);
+  const questionnaireConfig = getQuestionnaireConfig(type);
 
   // Create dynamic Zod schema based on questions
   const createValidationSchema = () => {
@@ -510,7 +512,7 @@ export default function QuestionnairePage({ params }: PageProps) {
             {questionnaire.client_name} - {questionnaire.product_name}
           </h1>
           <p className="text-[#86868b]">
-            {getQuestionsByType(type)[0]?.title || 'Questionnaire'}
+            {questionnaireConfig?.title || getQuestionsByType(type)[0]?.title || 'Questionnaire'}
           </p>
           {lastSavedAt && (
             <p className="text-sm text-[#86868b] mt-2">
@@ -518,6 +520,14 @@ export default function QuestionnairePage({ params }: PageProps) {
             </p>
           )}
         </div>
+
+        {/* Purpose and Goal Section */}
+        {questionnaireConfig && (questionnaireConfig.purpose || questionnaireConfig.goal) && (
+          <PurposeGoalSection
+            purpose={questionnaireConfig.purpose}
+            goal={questionnaireConfig.goal}
+          />
+        )}
 
         {/* Progress Indicator */}
         <ProgressIndicator sections={sections} values={formValues as Record<string, string | string[]>} />
@@ -604,6 +614,13 @@ export default function QuestionnairePage({ params }: PageProps) {
             )}
           </div>
         </form>
+
+        {/* Thank You Message */}
+        {questionnaireConfig?.thankYouMessage && (
+          <div className="mt-8 text-center">
+            <p className="text-[#86868b]">{questionnaireConfig.thankYouMessage}</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import type { QuestionConfig, SectionConfig, QuestionnaireConfig } from '@/types/questionnaire';
 import { PRODUCT_DESIGN_NEW_CONFIG } from './questions-product-design-new';
+import { PRODUCT_DESIGN_REDESIGN_CONFIG } from './questions-product-design-redesign';
+import { WEB_DESIGN_NEW_CONFIG } from './questions-web-design-new';
 
 // Legacy structure - keeping for backward compatibility
 export const PRODUCT_DESIGN_QUESTIONS: SectionConfig[] = [
@@ -446,8 +448,14 @@ export function getQuestionsByType(type: string): SectionConfig[] {
   if (type === 'product-design-new') {
     return PRODUCT_DESIGN_NEW_CONFIG.sections;
   }
+  if (type === 'product-design-redesign') {
+    return PRODUCT_DESIGN_REDESIGN_CONFIG.sections;
+  }
   if (type.startsWith('product-design')) {
     return PRODUCT_DESIGN_QUESTIONS;
+  }
+  if (type === 'web-design-new') {
+    return WEB_DESIGN_NEW_CONFIG.sections;
   }
   if (type.startsWith('web-design')) {
     return WEB_DESIGN_QUESTIONS;
@@ -466,6 +474,12 @@ export function getQuestionsByType(type: string): SectionConfig[] {
 export function getQuestionnaireConfig(type: string): QuestionnaireConfig | null {
   if (type === 'product-design-new') {
     return PRODUCT_DESIGN_NEW_CONFIG;
+  }
+  if (type === 'product-design-redesign') {
+    return PRODUCT_DESIGN_REDESIGN_CONFIG;
+  }
+  if (type === 'web-design-new') {
+    return WEB_DESIGN_NEW_CONFIG;
   }
   // For other types, return null (will use default structure)
   return null;

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
 
 export default function QuestionnairesPage() {
   return (
@@ -67,6 +68,14 @@ export default function QuestionnairesPage() {
             <p className="text-[#86868b]">
               Create a motion design questionnaire
             </p>
+          </Link>
+        </div>
+
+        <div className="flex justify-center mt-12">
+          <Link href="/questionnaires/archive">
+            <Button variant="outline">
+              See Archive
+            </Button>
           </Link>
         </div>
       </div>

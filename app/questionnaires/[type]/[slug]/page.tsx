@@ -572,8 +572,10 @@ export default function QuestionnairePage({ params }: PageProps) {
           />
         )}
 
-        {/* Progress Indicator */}
-        <ProgressIndicator sections={sections} values={formValues as Record<string, string | string[]>} />
+        {/* Progress Indicator - Sticky at top */}
+        <div className="pt-2">
+          <ProgressIndicator sections={sections} values={formValues as Record<string, string | string[]>} />
+        </div>
 
         {/* Form */}
         <form 

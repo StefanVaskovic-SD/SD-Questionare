@@ -34,9 +34,16 @@ export function PurposeGoalSection({ purpose, goal, clientName, productName }: P
       {goal && (
         <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6">
           <h3 className="text-xl font-semibold text-[#f5f5f7] mb-4">{goal.title}</h3>
-          <p className="text-[#86868b] whitespace-pre-line">
-            {replacePlaceholders(goal.content, clientName, productName)}
-          </p>
+          <ul className="text-[#86868b] space-y-2 list-disc list-inside">
+            {replacePlaceholders(goal.content, clientName, productName)
+              .split('\n\n')
+              .filter(item => item.trim() !== '')
+              .map((item, index) => (
+                <li key={index} className="text-[#86868b]">
+                  {item.trim()}
+                </li>
+              ))}
+          </ul>
         </div>
       )}
     </div>

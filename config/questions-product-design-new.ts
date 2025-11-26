@@ -299,7 +299,7 @@ export const PRODUCT_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         {
           key: 'decision_maker',
           label: 'Who is the decision maker?',
-          type: 'text',
+          type: 'textarea',
           required: false,
           helper: 'Pinpointing the key decision maker ensures that content and strategies are tailored to influence those with purchasing authority or decision-making power.',
         },
@@ -320,7 +320,7 @@ export const PRODUCT_DESIGN_NEW_CONFIG: QuestionnaireConfig = {
         {
           key: 'most_sold_plan',
           label: 'What is the most sold product plan?',
-          type: 'text',
+          type: 'textarea',
           required: false,
           helper: 'Identifying the top-selling offerings helps focus on what resonates most with your audience and informs promotional strategies.',
         },

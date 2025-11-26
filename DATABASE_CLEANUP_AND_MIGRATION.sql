@@ -48,3 +48,4 @@ CHECK (type IN (
 -- Your database is now ready for the new 7-type structure.
 
 
+

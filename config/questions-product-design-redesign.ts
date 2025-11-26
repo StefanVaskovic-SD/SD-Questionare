@@ -472,3 +472,4 @@ export const PRODUCT_DESIGN_REDESIGN_CONFIG: QuestionnaireConfig = {
   thankYouMessage: 'Thank you for taking the time to complete this questionnaire. Your answers will help us collect valuable insights about your product.',
 };
 
+

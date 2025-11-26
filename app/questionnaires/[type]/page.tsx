@@ -210,7 +210,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <Button
                 onClick={() => router.push('/questionnaires')}
                 variant="outline"
@@ -304,7 +304,7 @@ export default function CreateQuestionnairePage({ params }: PageProps) {
               </div>
             )}
 
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <Button
                 type="button"
                 variant="outline"

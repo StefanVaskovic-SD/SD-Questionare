@@ -31,3 +31,4 @@ CHECK (type IN (
 -- UPDATE questionnaires SET type = 'web-design-new' WHERE type = 'web-design';
 -- UPDATE questionnaires SET type = 'brand-design-new' WHERE type = 'brand-design';
 
+

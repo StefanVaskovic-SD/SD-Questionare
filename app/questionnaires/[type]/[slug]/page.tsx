@@ -604,7 +604,7 @@ export default function QuestionnairePage({ params }: PageProps) {
 
           {/* Action Buttons */}
           <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 sticky bottom-0">
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <Button
                 type="button"
                 variant="outline"

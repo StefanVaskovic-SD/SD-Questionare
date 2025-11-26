@@ -176,7 +176,7 @@ function ArchivePageContent() {
         </div>
 
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-[#f5f5f7]">Questionnaire Archive</h1>
+          <h1 className="text-4xl font-bold text-[#f5f5f7]">Archive</h1>
           <Button
             variant="outline"
             onClick={() => router.push('/questionnaires')}

@@ -573,7 +573,7 @@ export default function QuestionnairePage({ params }: PageProps) {
         )}
 
         {/* Progress Indicator - Sticky at top */}
-        <div className="pt-2">
+        <div className="sticky top-0 z-10">
           <ProgressIndicator sections={sections} values={formValues as Record<string, string | string[]>} />
         </div>
 

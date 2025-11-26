@@ -23,7 +23,7 @@ export function ProgressIndicator({ sections, values }: ProgressIndicatorProps) 
   const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
 
   return (
-    <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-4 mb-6 sticky top-0 z-10">
+    <div className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-4 mb-6">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-[#f5f5f7]">Progress</span>
         <span className="text-sm font-medium text-[#f5f5f7]">

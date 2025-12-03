@@ -406,13 +406,25 @@ export default function QuestionnairePage({ params }: PageProps) {
       await Promise.all(responsePromises);
 
       // Update questionnaire status
-      await supabase
+      const submittedAt = new Date().toISOString();
+      const { error: updateError } = await supabase
         .from('questionnaires')
         .update({
           status: 'submitted',
-          submitted_at: new Date().toISOString(),
+          submitted_at: submittedAt,
         })
         .eq('id', questionnaire.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      // Update local state immediately
+      setQuestionnaire(prev => prev ? {
+        ...prev,
+        status: 'submitted' as const,
+        submitted_at: submittedAt,
+      } : null);
 
       // Update draft with final submitted data (so user can see what they submitted)
       await supabase
@@ -495,7 +507,6 @@ export default function QuestionnairePage({ params }: PageProps) {
       );
 
       // Trigger webhook (non-blocking - don't wait for it)
-      const submittedAt = new Date().toISOString();
       triggerWebhook(
         questionnaire.id,
         type,
@@ -512,8 +523,8 @@ export default function QuestionnairePage({ params }: PageProps) {
 
       toast.success('Questionnaire submitted successfully!');
       
-      // Redirect to success page
-      router.push(`/questionnaires/${type}/${params.slug}/success?token=${token}`);
+      // Don't redirect - allow resubmission
+      // User can stay on the form and submit again if needed
     } catch (error) {
       console.error('Error submitting questionnaire:', error);
       toast.error('Failed to submit questionnaire');
@@ -611,7 +622,7 @@ export default function QuestionnairePage({ params }: PageProps) {
                 type="button"
                 variant="outline"
                 onClick={saveDraft}
-                disabled={saving || submitting || questionnaire.status === 'submitted'}
+                disabled={saving || submitting}
                 className="flex items-center gap-2"
               >
                 {saving ? (
@@ -623,13 +634,16 @@ export default function QuestionnairePage({ params }: PageProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={saving || submitting || questionnaire.status === 'submitted'}
+                disabled={saving || submitting}
                 className="flex items-center gap-2 flex-1"
               >
                 {submitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : questionnaire.status === 'submitted' ? (
-                  'Already Submitted'
+                  <>
+                    <Send className="w-4 h-4" />
+                    Resubmit
+                  </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
@@ -649,12 +663,9 @@ export default function QuestionnairePage({ params }: PageProps) {
                 </Button>
               )}
             </div>
-            {questionnaire.status === 'submitted' && (
+            {questionnaire.submitted_at && (
               <p className="text-sm text-[#86868b] mt-3 text-center">
-                This questionnaire has already been submitted on{' '}
-                {questionnaire.submitted_at
-                  ? new Date(questionnaire.submitted_at).toLocaleString()
-                  : 'previously'}
+                Last submitted: {new Date(questionnaire.submitted_at).toLocaleString()}
               </p>
             )}
           </div>

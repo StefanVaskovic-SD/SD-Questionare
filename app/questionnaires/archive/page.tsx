@@ -192,13 +192,20 @@ function ArchivePageContent() {
       }
 
       // Delete questionnaire from database (this will cascade delete responses and drafts)
-      const { error: deleteError } = await supabase
+      const { error: deleteError, data: deleteData } = await supabase
         .from('questionnaires')
         .delete()
-        .eq('id', questionnaireToDelete.id);
+        .eq('id', questionnaireToDelete.id)
+        .select();
 
       if (deleteError) {
+        console.error('Delete error details:', deleteError);
         throw deleteError;
+      }
+
+      // Verify deletion was successful
+      if (!deleteData || deleteData.length === 0) {
+        throw new Error('No rows were deleted. The questionnaire may not exist or you may not have permission to delete it.');
       }
 
       // Remove from local state

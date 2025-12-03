@@ -8,7 +8,9 @@ import type { Questionnaire, QuestionnaireType, QuestionnaireCategory } from '@/
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
-import { ExternalLink, Calendar, User, Package, CheckCircle, Clock, FileText } from 'lucide-react';
+import { ExternalLink, Calendar, User, Package, CheckCircle, Clock, FileText, X } from 'lucide-react';
+import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
+import toast from 'react-hot-toast';
 
 interface GroupedQuestionnaires {
   category: QuestionnaireCategory;
@@ -24,6 +26,9 @@ function ArchivePageContent() {
   const router = useRouter();
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [questionnaireToDelete, setQuestionnaireToDelete] = useState<Questionnaire | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function loadQuestionnaires() {
@@ -150,6 +155,66 @@ function ArchivePageContent() {
     });
   };
 
+  const handleDeleteClick = (questionnaire: Questionnaire) => {
+    setQuestionnaireToDelete(questionnaire);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!questionnaireToDelete) return;
+
+    setDeleting(true);
+    try {
+      // First, delete all files from storage
+      const folderPath = `${questionnaireToDelete.type}/${questionnaireToDelete.slug}`;
+      
+      try {
+        // List all files in the folder
+        const { data: files, error: listError } = await supabase.storage
+          .from('questionnaire-files')
+          .list(folderPath);
+
+        if (!listError && files && files.length > 0) {
+          // Delete all files
+          const filePaths = files.map(file => `${folderPath}/${file.name}`);
+          const { error: deleteError } = await supabase.storage
+            .from('questionnaire-files')
+            .remove(filePaths);
+
+          if (deleteError) {
+            console.error('Error deleting files:', deleteError);
+            // Continue with database deletion even if file deletion fails
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting files from storage:', error);
+        // Continue with database deletion even if file deletion fails
+      }
+
+      // Delete questionnaire from database (this will cascade delete responses and drafts)
+      const { error: deleteError } = await supabase
+        .from('questionnaires')
+        .delete()
+        .eq('id', questionnaireToDelete.id);
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      // Remove from local state
+      setQuestionnaires(prev => prev.filter(q => q.id !== questionnaireToDelete.id));
+      
+      toast.success('Questionnaire deleted successfully');
+      setDeleteModalOpen(false);
+      setQuestionnaireToDelete(null);
+    } catch (error) {
+      console.error('Error deleting questionnaire:', error);
+      toast.error('Failed to delete questionnaire. Please try again.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#080808] flex items-center justify-center">
@@ -206,9 +271,19 @@ function ArchivePageContent() {
                       {typeGroup.questionnaires.map((questionnaire) => (
                         <div
                           key={questionnaire.id}
-                          className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 hover:border-[#6295ff] transition-colors"
+                          className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 hover:border-[#6295ff] transition-colors relative"
                         >
-                          <div className="space-y-4">
+                          {/* Delete button */}
+                          <button
+                            onClick={() => handleDeleteClick(questionnaire)}
+                            disabled={deleting}
+                            className="absolute top-4 right-4 p-1.5 text-[#86868b] hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Delete questionnaire"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+
+                          <div className="space-y-4 pr-8">
                             {/* Client and Product Name */}
                             <div>
                               <div className="flex items-start gap-2 mb-2">
@@ -281,6 +356,26 @@ function ArchivePageContent() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setQuestionnaireToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Questionnaire"
+        message={
+          questionnaireToDelete
+            ? `Are you sure you want to delete the questionnaire for "${questionnaireToDelete.client_name}" - "${questionnaireToDelete.product_name}"? This action cannot be undone and will delete all associated responses, drafts, and files.`
+            : ''
+        }
+        confirmText={deleting ? 'Deleting...' : 'Delete'}
+        cancelText="Cancel"
+        confirmVariant="primary"
+        isLoading={deleting}
+      />
     </div>
   );
 }
@@ -292,5 +387,6 @@ export default function ArchivePage() {
     </PasswordProtection>
   );
 }
+
 
 

@@ -19,3 +19,4 @@ CREATE POLICY "Allow delete on drafts"
   ON draft_saves FOR DELETE
   USING (true);
 
+

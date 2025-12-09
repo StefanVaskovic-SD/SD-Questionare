@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { PasswordProtection } from '@/components/auth/PasswordProtection';
 import { supabase } from '@/lib/supabase';
 import { getQuestionnaireUrl } from '@/lib/utils';
-import type { Questionnaire, QuestionnaireType, QuestionnaireCategory } from '@/types/questionnaire';
+import type { Questionnaire, QuestionnaireType } from '@/types/questionnaire';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
@@ -12,20 +12,13 @@ import { ExternalLink, Calendar, User, Package, CheckCircle, Clock, FileText, X 
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import toast from 'react-hot-toast';
 
-interface GroupedQuestionnaires {
-  category: QuestionnaireCategory;
-  displayName: string;
-  types: {
-    type: QuestionnaireType;
-    displayName: string;
-    questionnaires: Questionnaire[];
-  }[];
-}
+type TabCategory = 'product-design' | 'web-design' | 'brand-design' | 'motion';
 
 function ArchivePageContent() {
   const router = useRouter();
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<TabCategory>('product-design');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [questionnaireToDelete, setQuestionnaireToDelete] = useState<Questionnaire | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -54,67 +47,68 @@ function ArchivePageContent() {
     loadQuestionnaires();
   }, []);
 
-  // Group questionnaires by category and type
-  const groupedQuestionnaires: GroupedQuestionnaires[] = [
-    {
-      category: 'product-design',
-      displayName: 'Product Design',
-      types: [
-        {
-          type: 'product-design-new',
-          displayName: 'New Product',
-          questionnaires: questionnaires.filter(q => q.type === 'product-design-new'),
-        },
-        {
-          type: 'product-design-redesign',
-          displayName: 'Redesign',
-          questionnaires: questionnaires.filter(q => q.type === 'product-design-redesign'),
-        },
-      ],
-    },
-    {
-      category: 'web-design',
-      displayName: 'Web Design',
-      types: [
-        {
-          type: 'web-design-new',
-          displayName: 'New Website',
-          questionnaires: questionnaires.filter(q => q.type === 'web-design-new'),
-        },
-        {
-          type: 'web-design-redesign',
-          displayName: 'Redesign',
-          questionnaires: questionnaires.filter(q => q.type === 'web-design-redesign'),
-        },
-      ],
-    },
-    {
-      category: 'brand-design',
-      displayName: 'Brand Design',
-      types: [
-        {
-          type: 'brand-design-new',
-          displayName: 'New Brand Identity',
-          questionnaires: questionnaires.filter(q => q.type === 'brand-design-new'),
-        },
-        {
-          type: 'brand-design-rebrand',
-          displayName: 'Rebrand',
-          questionnaires: questionnaires.filter(q => q.type === 'brand-design-rebrand'),
-        },
-      ],
-    },
-    {
-      category: 'motion',
-      displayName: 'Motion',
-      types: [
-        {
-          type: 'motion',
-          displayName: 'Motion',
-          questionnaires: questionnaires.filter(q => q.type === 'motion'),
-        },
-      ],
-    },
+  // Get questionnaires for active tab
+  const getQuestionnairesForTab = (category: TabCategory): Questionnaire[] => {
+    switch (category) {
+      case 'product-design':
+        return questionnaires.filter(q => 
+          q.type === 'product-design-new' || q.type === 'product-design-redesign'
+        );
+      case 'web-design':
+        return questionnaires.filter(q => 
+          q.type === 'web-design-new' || q.type === 'web-design-redesign'
+        );
+      case 'brand-design':
+        return questionnaires.filter(q => 
+          q.type === 'brand-design-new' || q.type === 'brand-design-rebrand'
+        );
+      case 'motion':
+        return questionnaires.filter(q => q.type === 'motion');
+      default:
+        return [];
+    }
+  };
+
+  // Get type display name
+  const getTypeDisplayName = (type: QuestionnaireType): string => {
+    switch (type) {
+      case 'product-design-new':
+        return 'New Product';
+      case 'product-design-redesign':
+        return 'Redesign';
+      case 'web-design-new':
+        return 'New Website';
+      case 'web-design-redesign':
+        return 'Redesign';
+      case 'brand-design-new':
+        return 'New Brand Identity';
+      case 'brand-design-rebrand':
+        return 'Rebrand';
+      case 'motion':
+        return 'Motion';
+      default:
+        return type;
+    }
+  };
+
+  const activeQuestionnaires = getQuestionnairesForTab(activeTab);
+
+  // Group active questionnaires by type and sort by date
+  const groupedByType = activeQuestionnaires
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .reduce((acc, questionnaire) => {
+      if (!acc[questionnaire.type]) {
+        acc[questionnaire.type] = [];
+      }
+      acc[questionnaire.type].push(questionnaire);
+      return acc;
+    }, {} as Record<QuestionnaireType, Questionnaire[]>);
+
+  const tabs: { category: TabCategory; displayName: string }[] = [
+    { category: 'product-design', displayName: 'Product Design' },
+    { category: 'web-design', displayName: 'Web Design' },
+    { category: 'brand-design', displayName: 'Brand Design' },
+    { category: 'motion', displayName: 'Motion' },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -257,25 +251,55 @@ function ArchivePageContent() {
           </Button>
         </div>
 
-        {/* Grouped Questionnaires */}
-        <div className="space-y-12">
-          {groupedQuestionnaires.map((categoryGroup) => (
-            <div key={categoryGroup.category} className="space-y-6">
-              <h2 className="text-2xl font-semibold text-[#f5f5f7] border-b border-[#2a2a2a] pb-2">
-                {categoryGroup.displayName}
-              </h2>
+        {/* Tabs */}
+        <div className="mb-8 border-b border-[#2a2a2a]">
+          <div className="flex gap-1 overflow-x-auto">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.category;
+              const tabQuestionnaires = getQuestionnairesForTab(tab.category);
+              const count = tabQuestionnaires.length;
 
-              {categoryGroup.types.map((typeGroup) => {
-                if (typeGroup.questionnaires.length === 0) return null;
+              return (
+                <button
+                  key={tab.category}
+                  onClick={() => setActiveTab(tab.category)}
+                  className={`
+                    px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap
+                    border-b-2 -mb-px
+                    ${isActive
+                      ? 'text-[#6295ff] border-[#6295ff] bg-[#6295ff]/5'
+                      : 'text-[#86868b] border-transparent hover:text-[#f5f5f7] hover:border-[#2a2a2a]'
+                    }
+                  `}
+                >
+                  {tab.displayName}
+                  {count > 0 && (
+                    <span className={`
+                      ml-2 px-2 py-0.5 rounded-full text-xs
+                      ${isActive
+                        ? 'bg-[#6295ff]/20 text-[#6295ff]'
+                        : 'bg-[#2a2a2a] text-[#86868b]'
+                      }
+                    `}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-                return (
-                  <div key={typeGroup.type} className="space-y-4">
-                    <h3 className="text-xl font-medium text-[#86868b] ml-4">
-                      {typeGroup.displayName}:
-                    </h3>
+        {/* Questionnaires for Active Tab */}
+        <div className="space-y-8">
+          {Object.entries(groupedByType).map(([type, typeQuestionnaires]) => (
+            <div key={type} className="space-y-4">
+              <h3 className="text-xl font-medium text-[#86868b]">
+                {getTypeDisplayName(type as QuestionnaireType)}:
+              </h3>
 
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      {typeGroup.questionnaires.map((questionnaire) => (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {typeQuestionnaires.map((questionnaire) => (
                         <div
                           key={questionnaire.id}
                           className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 hover:border-[#6295ff] transition-colors relative"
@@ -351,17 +375,19 @@ function ArchivePageContent() {
                       ))}
                     </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           ))}
-        </div>
 
-        {questionnaires.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-[#86868b] text-lg">No questionnaires found in archive.</p>
-          </div>
-        )}
+          {activeQuestionnaires.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-[#86868b] text-lg">
+                No questionnaires found for {tabs.find(t => t.category === activeTab)?.displayName}.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}

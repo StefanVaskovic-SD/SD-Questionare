@@ -300,79 +300,76 @@ function ArchivePageContent() {
 
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {typeQuestionnaires.map((questionnaire) => (
-                        <div
-                          key={questionnaire.id}
-                          className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 hover:border-[#6295ff] transition-colors relative"
-                        >
-                          {/* Delete button */}
-                          <button
-                            onClick={() => handleDeleteClick(questionnaire)}
-                            disabled={deleting}
-                            className="absolute top-4 right-4 p-1.5 text-[#86868b] hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Delete questionnaire"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
+                  <div
+                    key={questionnaire.id}
+                    className="bg-[#1a1a1a] rounded-lg border border-[#2a2a2a] p-6 hover:border-[#6295ff] transition-colors relative"
+                  >
+                    {/* Delete button */}
+                    <button
+                      onClick={() => handleDeleteClick(questionnaire)}
+                      disabled={deleting}
+                      className="absolute top-4 right-4 p-1.5 text-[#86868b] hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Delete questionnaire"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
 
-                          <div className="space-y-4 pr-8">
-                            {/* Client and Product Name */}
-                            <div>
-                              <div className="flex items-start gap-2 mb-2">
-                                <User className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-[#86868b]">Client</p>
-                                  <p className="text-[#f5f5f7] font-medium truncate">
-                                    {questionnaire.client_name}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-start gap-2">
-                                <Package className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-[#86868b]">Product</p>
-                                  <p className="text-[#f5f5f7] font-medium truncate">
-                                    {questionnaire.product_name}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Status */}
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-[#86868b]">Status</span>
-                              {getStatusBadge(questionnaire.status)}
-                            </div>
-
-                            {/* Created Date */}
-                            <div className="flex items-start gap-2">
-                              <Calendar className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm text-[#86868b]">Created</p>
-                                <p className="text-[#f5f5f7] text-sm">
-                                  {formatDate(questionnaire.created_at)}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* Link */}
-                            <div className="pt-2 border-t border-[#2a2a2a]">
-                              <a
-                                href={getQuestionnaireUrl(
-                                  questionnaire.type,
-                                  questionnaire.slug,
-                                  questionnaire.access_token
-                                )}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 text-[#6295ff] hover:text-[#7aa5ff] transition-colors text-sm font-medium"
-                              >
-                                <ExternalLink className="w-4 h-4" />
-                                View Questionnaire
-                              </a>
-                            </div>
+                    <div className="space-y-4 pr-8">
+                      {/* Client and Product Name */}
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <User className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-[#86868b]">Client</p>
+                            <p className="text-[#f5f5f7] font-medium truncate">
+                              {questionnaire.client_name}
+                            </p>
                           </div>
                         </div>
-                      ))}
+                        <div className="flex items-start gap-2">
+                          <Package className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-[#86868b]">Product</p>
+                            <p className="text-[#f5f5f7] font-medium truncate">
+                              {questionnaire.product_name}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Status */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-[#86868b]">Status</span>
+                        {getStatusBadge(questionnaire.status)}
+                      </div>
+
+                      {/* Created Date */}
+                      <div className="flex items-start gap-2">
+                        <Calendar className="w-4 h-4 text-[#86868b] mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-[#86868b]">Created</p>
+                          <p className="text-[#f5f5f7] text-sm">
+                            {formatDate(questionnaire.created_at)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Link */}
+                      <div className="pt-2 border-t border-[#2a2a2a]">
+                        <a
+                          href={getQuestionnaireUrl(
+                            questionnaire.type,
+                            questionnaire.slug,
+                            questionnaire.access_token
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-[#6295ff] hover:text-[#7aa5ff] transition-colors text-sm font-medium"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          View Questionnaire
+                        </a>
+                      </div>
                     </div>
                   </div>
                 ))}

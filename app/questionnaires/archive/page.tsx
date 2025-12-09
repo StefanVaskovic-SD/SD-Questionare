@@ -292,10 +292,10 @@ function ArchivePageContent() {
 
         {/* Questionnaires for Active Tab */}
         <div className="space-y-8">
-          {Object.entries(groupedByType).map(([type, typeQuestionnaires]) => (
+          {(Object.entries(groupedByType) as [QuestionnaireType, Questionnaire[]][]).map(([type, typeQuestionnaires]) => (
             <div key={type} className="space-y-4">
               <h3 className="text-xl font-medium text-[#86868b]">
-                {getTypeDisplayName(type as QuestionnaireType)}:
+                {getTypeDisplayName(type)}:
               </h3>
 
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
